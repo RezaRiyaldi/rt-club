@@ -4,7 +4,7 @@ var defineButtons = function (buttonsNeeded, customButtons = null) {
     if (buttonsNeeded.includes('reload')) {
         var reloadButton = {
             text: '<i class="fas fa-sync-alt"></i> Reload',
-            action: function(e, dt, node, config) {
+            action: function (e, dt, node, config) {
                 dt.ajax.reload();
             },
             className: 'btn btn-sm btn-info'
@@ -76,6 +76,11 @@ var datatable = function (data) {
             topCenter: {
                 buttons: defineButtons(data.buttons, data.customButtons),
             }
-        }
+        },
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
     })
+    $(document).ready(function() {
+        // Atur lebar dropdown menu
+        $('select[name="' + data.id + '_length"]').css('width', '50px');
+    });
 }

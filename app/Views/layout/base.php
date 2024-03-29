@@ -57,7 +57,9 @@
     <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
         <!-- Navbar -->
         <?= $this->include('layout/_navbar'); ?>
-        <?= view('Myth\Auth\Views\_message_block') ?>
+        <div class="px-4 mt-2">
+            <?= view('Myth\Auth\Views\_message_block') ?>
+        </div>
 
         <!-- End Navbar -->
         <div class="container-fluid py-4">
@@ -65,7 +67,6 @@
             <?= $this->include('layout/_footer.php'); ?>
         </div>
     </main>
-    <?= $this->include('layout/_config'); ?>
     <!--   Core JS Files   -->
     <script src="<?= base_url() ?>assets/js/core/popper.min.js"></script>
     <script src="<?= base_url() ?>assets/js/core/bootstrap.min.js"></script>
@@ -75,7 +76,7 @@
 
     <!-- DATATABLE -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>

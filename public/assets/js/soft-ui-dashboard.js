@@ -268,7 +268,7 @@ function navbarBlurOnScroll(id) {
     }, 10);
   } else {
     window.onscroll = debounce(function() {
-      transparentNavbar();
+      // transparentNavbar();
     }, 10);
   }
 

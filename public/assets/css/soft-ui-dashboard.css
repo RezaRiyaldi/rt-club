@@ -153,6 +153,9 @@ p {
   margin-top: 0;
   margin-bottom: 1rem;
 }
+#dt-length-0 {
+  width: 60px;
+}
 
 abbr[title],
 abbr[data-bs-original-title] {

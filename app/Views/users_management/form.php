@@ -3,13 +3,13 @@
 <div class="row">
     <div class="col">
         <div class="card">
-            <form action="/users-man/add" method="post">
+            <form action="<?= $url ?>" method="post">
+                <?= csrf_field() ?>
 
                 <div class="card-header pb-0 border-bottom">
-                    <h6>Tambah User</h6>
+                    <h6><?= $title ?></h6>
                 </div>
                 <div class="card-body" id="container-family">
-                    <?= csrf_field() ?>
                     <div class="row">
                         <div class="col-md-8 mx-auto d-block">
                             <div class="mb-3 text-center">
@@ -176,7 +176,7 @@
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">Kelurahan <span class="text-danger">*</span></label>
-                                                <select name="ward[]" id="ward" class="form-select" required>
+                                                <select name="village[]" id="village" class="form-select" required>
                                                     <option>-- Pilih Kelurahan</option>
                                                 </select>
                                             </div>
@@ -201,6 +201,8 @@
                                         <label for="">Alamat <span class="text-danger">*</span></label>
                                         <textarea name="address[]" id="address" cols="30" rows="2" class="form-control" required placeholder="Contoh: Perum Kertamukti Sakti Blok Z99 no 99"></textarea>
                                     </div>
+
+                                    <input type="hidden" name="status_family[]" value="Kepala Keluarga">
                                 </div>
                             </div>
                         </div>
@@ -276,21 +278,21 @@
         })
     }
 
-    var getWard = function(subdistrictID, index = '') {
+    var getVillage = function(subdistrictID, index = '') {
         $.ajax({
             url: `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrictID}.json`,
             method: 'GET',
             dataType: 'JSON',
-            success: function(ward) {
-                $("#ward" + index).empty();
+            success: function(village) {
+                $("#village" + index).empty();
                 var option;
 
                 option += `<option>-- Pilih Kelurahan</option>`;
-                $.each(ward, (key, val) => {
+                $.each(village, (key, val) => {
                     option += `<option value="${val.name}" id="${val.id}">${val.name}</option>`;
                 })
 
-                $("#ward" + index).append(option)
+                $("#village" + index).append(option)
             }
         })
     }
@@ -337,7 +339,7 @@
             index = '';
         }
 
-        getWard(selected, index);
+        getVillage(selected, index);
     })
 
     $(document).on('change', "input[id^='addressSame']", function() {
@@ -354,7 +356,7 @@
         var province;
         var city;
         var subdistrict;
-        var ward;
+        var village;
         var rt = $("#rt" + index);
         var rw = $("#rw" + index);
         var address = $("#address" + index);
@@ -364,7 +366,7 @@
             var provinceLead = $("#province").val();
             var cityLead = $("#city").val();
             var subdistrictLead = $("#subdistrict").val();
-            var wardLead = $("#ward").val();
+            var villageLead = $("#village").val();
             var rtLead = $("#rt").val();
             var rwLead = $("#rw").val();
             var addressLead = $("#address").val();
@@ -372,12 +374,12 @@
             $("#province" + index).remove()
             $("#city" + index).remove()
             $("#subdistrict" + index).remove()
-            $("#ward" + index).remove()
+            $("#village" + index).remove()
 
             $("#containerProvince" + index).append(`<input type="text" id="province${index}" class="form-control" name="province[${index}]" value="${provinceLead}" readonly />`)
             $("#containerCity" + index).append(`<input type="text" id="city${index}" class="form-control" name="city[${index}]" value="${cityLead}" readonly />`)
             $("#containerSubdistrict" + index).append(`<input type="text" id="subdistrict${index}" class="form-control" name="subdistrict[${index}]" value="${subdistrictLead}" readonly />`)
-            $("#containerWard" + index).append(`<input type="text" id="ward${index}" class="form-control" name="ward[${index}]" value="${wardLead}" readonly />`)
+            $("#containerVillage" + index).append(`<input type="text" id="village${index}" class="form-control" name="village[${index}]" value="${villageLead}" readonly />`)
 
             rt.val(rtLead)
             rt.attr('readonly', true)
@@ -391,7 +393,7 @@
             $("#province" + index).remove()
             $("#city" + index).remove()
             $("#subdistrict" + index).remove()
-            $("#ward" + index).remove()
+            $("#village" + index).remove()
 
             province = `<select name="province[${index}]" id="province${index}" class="form-select" required>
                             <option>-- Pilih Provinsi</option>
@@ -409,10 +411,10 @@
                             </select>`;
             $("#containerSubdistrict" + index).append(subdistrict)
 
-            ward = `<select name="ward[${index}]" id="ward${index}" class="form-select" required>
+            village = `<select name="village[${index}]" id="village${index}" class="form-select" required>
                         <option>-- Pilih Kelurahan</option>
                     </select>`;
-            $("#containerWard" + index).append(ward)
+            $("#containerVillage" + index).append(village)
 
             rt.val('')
             rt.attr('readonly', false)
@@ -570,7 +572,17 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class=" alert alert-info py-1">
+                    <div class="mb-2">
+                        <label for="">Hubungan <span class="text-danger">*</span></label>
+                        <select name="status_family[]" id="status_family" class="form-select" required>
+                            <option value="">-- Hubungan dengan kepala keluarga</option>
+                            <option value="Istri">Istri</option>
+                            <option value="Anak">Anak</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-0 mt-2 alert alert-info py-1">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="addressSame${index}">
                             <label class="form-check-label mb-0" for="addressSame${index}">Alamat sama dengan Kepala Keluarga</label>
@@ -605,9 +617,9 @@
                         </div>
 
                         <div class="col-6">
-                            <div class="mb-2" id="containerWard${index}">
+                            <div class="mb-2" id="containerVillage${index}">
                                 <label for="">Kelurahan <span class="text-danger">*</span></label>
-                                <select name="ward[${index}]" id="ward${index}" class="form-select" required>
+                                <select name="village[${index}]" id="village${index}" class="form-select" required>
                                     <option>-- Pilih Kelurahan</option>
                                 </select>
                             </div>
