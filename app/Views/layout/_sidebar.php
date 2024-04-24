@@ -11,6 +11,9 @@ $request = service('request')->uri->getSegment(1);
                 <span class="nav-link-text ms-1">Dashboard</span>
             </a>
         </li>
+        <li class="nav-item mt-3">
+            <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Management</h6>
+        </li>
         <li class="nav-item">
             <a class="nav-link <?= $request == 'users-man' ? 'active' : '' ?>" href="<?= base_url() ?>users-man">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -25,6 +28,25 @@ $request = service('request')->uri->getSegment(1);
                     <i class="fas fa-users-cog <?= $request == 'groups-man' ? '' : 'text-dark' ?>"></i>
                 </div>
                 <span class="nav-link-text ms-1">Groups Management</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $request == 'settings-man' ? 'active' : '' ?>" href="<?= base_url() ?>settings-man">
+                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-cog <?= $request == 'settings-man' ? '' : 'text-dark' ?>"></i>
+                </div>
+                <span class="nav-link-text ms-1">Settings Management</span>
+            </a>
+        </li>
+        <li class="nav-item mt-3">
+            <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Keuangan</h6>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $request == 'iuran' ? 'active' : '' ?>" href="<?= base_url() ?>iuran">
+                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-money-bill <?= $request == 'iuran' ? '' : 'text-dark' ?>"></i>
+                </div>
+                <span class="nav-link-text ms-1">Iuran Warga</span>
             </a>
         </li>
         <!-- <li class="nav-item">

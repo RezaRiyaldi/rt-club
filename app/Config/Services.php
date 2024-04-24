@@ -29,4 +29,9 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    public static function setting($getShared = true)
+    {
+        return \Config\AppService::setting($getShared);
+    }
 }

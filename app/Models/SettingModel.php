@@ -4,22 +4,22 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class WargaModel extends Model
+class SettingModel extends Model
 {
-    protected $table            = 'wargas';
+    protected $table            = 'settings';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
-    protected $useSoftDeletes   = true;
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'user_id', 'fullname', 'no_kk', 'no_ktp', 'place_of_birth', 'birth_of_day', 'gender', 'marital_status', 'religion', 'blood_group', 'work', 'address', 'created_by', 'updated_by', 'deleted_by'
+        'keyword', 'value'
     ];
 
     protected bool $allowEmptyInserts = false;
 
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -41,4 +41,23 @@ class WargaModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function updateOrCreate($key, $value)
+    {
+        $existingSetting = $this->where('keyword', $key)->first();
+
+        if ($existingSetting) {
+            // Update setting jika sudah ada
+            $this->update($existingSetting->id, ['value' => $value]);
+            return $existingSetting->id;
+        } else {
+            // Buat setting baru jika belum ada
+            $data = [
+                'keyword' => $key,
+                'value' => $value
+            ];
+            $this->insert($data);
+            return $this->getInsertID();
+        }
+    }
 }

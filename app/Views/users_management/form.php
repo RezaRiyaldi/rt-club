@@ -24,7 +24,7 @@
                             <h4 class="text-center">Kepala Keluarga</h4>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-5">
                                             <div class="mb-2">
                                                 <label for="">Username <span class="text-danger">*</span></label>
@@ -38,7 +38,7 @@
                                                 <input type="email" class="form-control" name="email[]" required placeholder="Email" value="test@test.com">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="row">
                                         <div class="col-md-5">
@@ -146,7 +146,7 @@
 
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <div class="col-6">
+                                        <!-- <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">Provinsi <span class="text-danger">*</span></label>
                                                 <select name="province[]" id="province" class="form-select" required>
@@ -158,7 +158,7 @@
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">Kab/Kota <span class="text-danger">*</span></label>
-                                                <select name="city[]" id="city" class="form-select" required>
+                                                <select name="regency[]" id="regency" class="form-select" required>
                                                     <option>-- Pilih Kab/Kota</option>
                                                 </select>
                                             </div>
@@ -167,7 +167,7 @@
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">Kecamatan <span class="text-danger">*</span></label>
-                                                <select name="subdistrict[]" id="subdistrict" class="form-select" required>
+                                                <select name="district[]" id="district" class="form-select" required>
                                                     <option>-- Pilih Kecamatan</option>
                                                 </select>
                                             </div>
@@ -180,27 +180,41 @@
                                                     <option>-- Pilih Kelurahan</option>
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> -->
 
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">RT <span class="text-danger">*</span></label>
-                                                <input type="number" id="rt" class="form-control" name="rt[]" required placeholder="RT">
+                                                <!-- <input type="number" id="rt" class="form-control" name="rt[]" required placeholder="RT"> -->
+                                                <?= generateInput($settings['perum_rt'], 'rt[]') ?>
+
                                             </div>
                                         </div>
 
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">RW <span class="text-danger">*</span></label>
-                                                <input type="number" id="rw" class="form-control" name="rw[]" required placeholder="RW">
+                                                <!-- <input type="number" id="rw" class="form-control" name="rw[]" required placeholder="RW"> -->
+                                                <?= generateInput($settings['perum_rw'], 'rw[]') ?>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <label for="">No Rumah <span class="text-danger">*</span></label>
+
+                                            <div class="input-group">
+                                                <?= generateInput($settings['perum_bloks'], 'blok[]') ?>
+                                                <?= generateInput($settings['perum_blok_number'], 'blok_number[]') ?>
+                                                <span class="input-group-text">No</span>
+                                                <?= generateInput($settings['perum_home_number'], 'home_number[]') ?>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="mb-2">
+                                    <!-- <div class="mb-2">
                                         <label for="">Alamat <span class="text-danger">*</span></label>
                                         <textarea name="address[]" id="address" cols="30" rows="2" class="form-control" required placeholder="Contoh: Perum Kertamukti Sakti Blok Z99 no 99"></textarea>
-                                    </div>
+                                    </div> -->
 
                                     <input type="hidden" name="status_family[]" value="Kepala Keluarga">
                                 </div>
@@ -220,220 +234,232 @@
 
 <?= $this->section('script'); ?>
 <script>
-    var getProvince = function(index = '') {
-        $.ajax({
-            url: 'https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json',
-            method: 'GET',
-            dataType: 'JSON',
-            success: function(province) {
-                $("#province" + index).empty();
-                var option;
+    var getForm = function() {
+        var dataForm = ('<?= json_encode($family) ?>');
 
-                option += `<option>-- Pilih Provinsi</option>`;
-                $.each(province, (key, val) => {
-                    option += `<option value="${val.name}" id="${val.id}">${val.name}</option>`;
-                })
-
-                $("#province" + index).append(option)
-            }
-        })
+        console.log(dataForm)
     }
-    getProvince()
+    getForm();
 
-    var getCity = function(provinceID, index = '') {
-        $.ajax({
-            url: `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceID}.json`,
-            method: 'GET',
-            dataType: 'JSON',
-            success: function(city) {
-                $("#city" + index).empty();
-                var option;
+    // var getProvince = function(index = '') {
+    //     $.ajax({
+    //         url: '<?= base_url() ?>get-region/provinces',
+    //         method: 'GET',
+    //         dataType: 'JSON',
+    //         success: function(province) {
+    //             $("#province" + index).empty();
+    //             var option;
 
-                option += `<option>-- Pilih Kab/Kota</option>`;
-                $.each(city, (key, val) => {
-                    option += `<option value="${val.name}" id="${val.id}">${val.name}</option>`;
-                })
+    //             option += `<option>-- Pilih Provinsi</option>`;
+    //             $.each(province, (key, val) => {
+    //                 option += `<option value="${val.province}" id="${val.id}">${val.province}</option>`;
+    //             })
 
-                $("#city" + index).append(option)
-            }
-        })
-    }
+    //             $("#province" + index).append(option)
+    //         }
+    //     })
+    // }
+    // getProvince()
 
-    var getSubdistrict = function(cityID, index = '') {
-        $.ajax({
-            url: `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${cityID}.json`,
-            method: 'GET',
-            dataType: 'JSON',
-            success: function(subdistrict) {
-                $("#subdistrict" + index).empty();
-                var option;
+    // var getRegency = function(provinceID, index = '') {
+    //     $.ajax({
+    //         url: `<?= base_url() ?>get-region/regencies/${provinceID}`,
+    //         method: 'GET',
+    //         dataType: 'JSON',
+    //         success: function(regency) {
+    //             $("#regency" + index).empty();
+    //             var option;
 
-                option += `<option>-- Pilih Kecamatan</option>`;
-                $.each(subdistrict, (key, val) => {
-                    option += `<option value="${val.name}" id="${val.id}">${val.name}</option>`;
-                })
+    //             option += `<option>-- Pilih Kab/Kota</option>`;
+    //             $.each(regency, (key, val) => {
+    //                 option += `<option value="${val.regency}" id="${val.id}">${val.regency}</option>`;
+    //             })
 
-                $("#subdistrict" + index).append(option)
-            }
-        })
-    }
+    //             $("#regency" + index).append(option)
+    //         }
+    //     })
+    // }
 
-    var getVillage = function(subdistrictID, index = '') {
-        $.ajax({
-            url: `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrictID}.json`,
-            method: 'GET',
-            dataType: 'JSON',
-            success: function(village) {
-                $("#village" + index).empty();
-                var option;
+    // var getDistrict = function(regencyID, index = '') {
+    //     $.ajax({
+    //         url: `<?= base_url() ?>get-region/districts/${regencyID}`,
+    //         method: 'GET',
+    //         dataType: 'JSON',
+    //         success: function(district) {
+    //             $("#district" + index).empty();
+    //             var option;
 
-                option += `<option>-- Pilih Kelurahan</option>`;
-                $.each(village, (key, val) => {
-                    option += `<option value="${val.name}" id="${val.id}">${val.name}</option>`;
-                })
+    //             option += `<option>-- Pilih Kecamatan</option>`;
+    //             $.each(district, (key, val) => {
+    //                 option += `<option value="${val.district}" id="${val.id}">${val.district}</option>`;
+    //             })
 
-                $("#village" + index).append(option)
-            }
-        })
-    }
+    //             $("#district" + index).append(option)
+    //         }
+    //     })
+    // }
 
-    $(document).on('change', "select[id^='province']", function() {
-        var id = $(this).attr("id");
-        var matches = id.match(/\d+/);
-        var selected = $(this).find(":selected").prop("id");
+    // var getVillage = function(districtID, index = '') {
+    //     $.ajax({
+    //         url: `<?= base_url() ?>get-region/villages/${districtID}`,
+    //         method: 'GET',
+    //         dataType: 'JSON',
+    //         success: function(village) {
+    //             $("#village" + index).empty();
+    //             var option;
 
-        var index;
-        if (matches && matches.length > 0) {
-            index = matches[0]
-        } else {
-            index = '';
-        }
+    //             option += `<option>-- Pilih Kelurahan</option>`;
+    //             $.each(village, (key, val) => {
+    //                 option += `<option value="${val.village}" id="${val.id}">${val.village}</option>`;
+    //             })
 
-        getCity(selected, index);
-    })
+    //             $("#village" + index).append(option)
+    //         }
+    //     })
+    // }
 
-    $(document).on('change', "select[id^='city']", function() {
-        var id = $(this).attr("id");
-        var matches = id.match(/\d+/);
-        var selected = $(this).find(":selected").prop("id");
+    // $(document).on('change', "select[id^='province']", function() {
+    //     var id = $(this).attr("id");
+    //     var matches = id.match(/\d+/);
+    //     var selected = $(this).find(":selected").prop("id");
 
-        var index;
-        if (matches && matches.length > 0) {
-            index = matches[0]
-        } else {
-            index = '';
-        }
+    //     var index;
+    //     if (matches && matches.length > 0) {
+    //         index = matches[0]
+    //     } else {
+    //         index = '';
+    //     }
 
-        getSubdistrict(selected, index);
-    })
+    //     getRegency(selected, index);
 
-    $(document).on('change', "select[id^='subdistrict']", function() {
-        var id = $(this).attr("id");
-        var matches = id.match(/\d+/);
-        var selected = $(this).find(":selected").prop("id");
+    //     $("#district" + index).empty().append('<option>-- Pilih Kecamatan</option>');
+    //     $("#village" + index).empty().append('<option>-- Pilih Kelurahan</option>');
+    // })
 
-        var index;
-        if (matches && matches.length > 0) {
-            index = matches[0]
-        } else {
-            index = '';
-        }
+    // $(document).on('change', "select[id^='regency']", function() {
+    //     var id = $(this).attr("id");
+    //     var matches = id.match(/\d+/);
+    //     var selected = $(this).find(":selected").prop("id");
 
-        getVillage(selected, index);
-    })
+    //     var index;
+    //     if (matches && matches.length > 0) {
+    //         index = matches[0]
+    //     } else {
+    //         index = '';
+    //     }
 
-    $(document).on('change', "input[id^='addressSame']", function() {
-        var id = $(this).attr("id");
-        var matches = id.match(/\d+/);
+    //     getDistrict(selected, index);
 
-        var index;
-        if (matches && matches.length > 0) {
-            index = matches[0]
-        } else {
-            index = '';
-        }
+    //     $("#village" + index).empty().append('<option>-- Pilih Kelurahan</option>');
+    // })
 
-        var province;
-        var city;
-        var subdistrict;
-        var village;
-        var rt = $("#rt" + index);
-        var rw = $("#rw" + index);
-        var address = $("#address" + index);
+    // $(document).on('change', "select[id^='district']", function() {
+    //     var id = $(this).attr("id");
+    //     var matches = id.match(/\d+/);
+    //     var selected = $(this).find(":selected").prop("id");
 
-        if ($(this).is(":checked")) {
-            console.log(`Checkbox ${index} dicentang.`);
-            var provinceLead = $("#province").val();
-            var cityLead = $("#city").val();
-            var subdistrictLead = $("#subdistrict").val();
-            var villageLead = $("#village").val();
-            var rtLead = $("#rt").val();
-            var rwLead = $("#rw").val();
-            var addressLead = $("#address").val();
+    //     var index;
+    //     if (matches && matches.length > 0) {
+    //         index = matches[0]
+    //     } else {
+    //         index = '';
+    //     }
 
-            $("#province" + index).remove()
-            $("#city" + index).remove()
-            $("#subdistrict" + index).remove()
-            $("#village" + index).remove()
+    //     getVillage(selected, index);
+    // })
 
-            $("#containerProvince" + index).append(`<input type="text" id="province${index}" class="form-control" name="province[${index}]" value="${provinceLead}" readonly />`)
-            $("#containerCity" + index).append(`<input type="text" id="city${index}" class="form-control" name="city[${index}]" value="${cityLead}" readonly />`)
-            $("#containerSubdistrict" + index).append(`<input type="text" id="subdistrict${index}" class="form-control" name="subdistrict[${index}]" value="${subdistrictLead}" readonly />`)
-            $("#containerVillage" + index).append(`<input type="text" id="village${index}" class="form-control" name="village[${index}]" value="${villageLead}" readonly />`)
+    // $(document).on('change', "input[id^='addressSame']", function() {
+    //     var id = $(this).attr("id");
+    //     var matches = id.match(/\d+/);
 
-            rt.val(rtLead)
-            rt.attr('readonly', true)
+    //     var index;
+    //     if (matches && matches.length > 0) {
+    //         index = matches[0]
+    //     } else {
+    //         index = '';
+    //     }
 
-            rw.val(rwLead)
-            rw.attr('readonly', true)
+    //     var province;
+    //     var regency;
+    //     var district;
+    //     var village;
+    //     var rt = $("#rt" + index);
+    //     var rw = $("#rw" + index);
+    //     var address = $("#address" + index);
 
-            address.val(addressLead)
-            address.attr('readonly', true)
-        } else {
-            $("#province" + index).remove()
-            $("#city" + index).remove()
-            $("#subdistrict" + index).remove()
-            $("#village" + index).remove()
+    //     if ($(this).is(":checked")) {
+    //         console.log(`Checkbox ${index} dicentang.`);
+    //         var provinceLead = $("#province").val();
+    //         var regencyLead = $("#regency").val();
+    //         var districtLead = $("#district").val();
+    //         var villageLead = $("#village").val();
+    //         var rtLead = $("#rt").val();
+    //         var rwLead = $("#rw").val();
+    //         var addressLead = $("#address").val();
 
-            province = `<select name="province[${index}]" id="province${index}" class="form-select" required>
-                            <option>-- Pilih Provinsi</option>
-                        </select>`;
-            $("#containerProvince" + index).append(province)
-            getProvince(index)
+    //         $("#province" + index).remove()
+    //         $("#regency" + index).remove()
+    //         $("#district" + index).remove()
+    //         $("#village" + index).remove()
 
-            city = `<select name="city[${index}]" id="city${index}" class="form-select" required>
-                        <option>-- Pilih Kab/Kota</option>
-                    </select>`;
-            $("#containerCity" + index).append(city)
+    //         $("#containerProvince" + index).append(`<input type="text" id="province${index}" class="form-control" name="province[${index}]" value="${provinceLead}" readonly />`)
+    //         $("#containerRegency" + index).append(`<input type="text" id="regency${index}" class="form-control" name="regency[${index}]" value="${regencyLead}" readonly />`)
+    //         $("#containerDistrict" + index).append(`<input type="text" id="district${index}" class="form-control" name="district[${index}]" value="${districtLead}" readonly />`)
+    //         $("#containerVillage" + index).append(`<input type="text" id="village${index}" class="form-control" name="village[${index}]" value="${villageLead}" readonly />`)
 
-            subdistrict = `<select name="subdistrict[${index}]" id="subdistrict${index}" class="form-select" required>
-                                <option>-- Pilih Kecamatan</option>
-                            </select>`;
-            $("#containerSubdistrict" + index).append(subdistrict)
+    //         rt.val(rtLead)
+    //         rt.attr('readonly', true)
 
-            village = `<select name="village[${index}]" id="village${index}" class="form-select" required>
-                        <option>-- Pilih Kelurahan</option>
-                    </select>`;
-            $("#containerVillage" + index).append(village)
+    //         rw.val(rwLead)
+    //         rw.attr('readonly', true)
 
-            rt.val('')
-            rt.attr('readonly', false)
+    //         address.val(addressLead)
+    //         address.attr('readonly', true)
+    //     } else {
+    //         $("#province" + index).remove()
+    //         $("#regency" + index).remove()
+    //         $("#district" + index).remove()
+    //         $("#village" + index).remove()
 
-            rw.val('')
-            rw.attr('readonly', false)
+    //         province = `<select name="province[${index}]" id="province${index}" class="form-select" required>
+    //                         <option>-- Pilih Provinsi</option>
+    //                     </select>`;
+    //         $("#containerProvince" + index).append(province)
+    //         getProvince(index)
 
-            address.val('')
-            address.attr('readonly', false)
+    //         regency = `<select name="regency[${index}]" id="regency${index}" class="form-select" required>
+    //                     <option>-- Pilih Kab/Kota</option>
+    //                 </select>`;
+    //         $("#containerRegency" + index).append(regency)
 
-        }
-    })
+    //         district = `<select name="district[${index}]" id="district${index}" class="form-select" required>
+    //                             <option>-- Pilih Kecamatan</option>
+    //                         </select>`;
+    //         $("#containerDistrict" + index).append(district)
+
+    //         village = `<select name="village[${index}]" id="village${index}" class="form-select" required>
+    //                     <option>-- Pilih Kelurahan</option>
+    //                 </select>`;
+    //         $("#containerVillage" + index).append(village)
+
+    //         rt.val('')
+    //         rt.attr('readonly', false)
+
+    //         rw.val('')
+    //         rw.attr('readonly', false)
+
+    //         address.val('')
+    //         address.attr('readonly', false)
+
+    //     }
+    // })
 
     $(document).on('click', "button[id='removeMember']", function() {
         var target = $("button#removeMember").data('target_id');
         $("#member-family-" + target).remove()
         $("#removeMember").remove();
 
-        var index = $('input[name="username[]"]').length;
+        var index = $('input[name="no_ktp[]"]').length;
 
         if (index > 1) {
             var removeButton = `<button class="btn btn-danger mb-0" id="removeMember" data-target_id="${index - 1}" type="button"><i class="fas fa-times"></i> Anggota Terakhir</button>`
@@ -450,23 +476,23 @@
             <hr>
             <h4 class="text-center">Anggota Keluarga</h4>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="mb-2">
-                                <label for="">Username <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="username[]" required placeholder="Username">
-                            </div>
-                        </div>
+                <div class="col-md-6">`
+                    // <div class="row">
+                    //     <div class="col-5">
+                    //         <div class="mb-2">
+                    //             <label for="">Username <span class="text-danger">*</span></label>
+                    //             <input type="text" class="form-control" name="username[]" required placeholder="Username">
+                    //         </div>
+                    //     </div>
 
-                        <div class="col-7">
-                            <div class="mb-2">
-                                <label for="">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" name="email[]" required placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-
+                    //     <div class="col-7">
+                    //         <div class="mb-2">
+                    //             <label for="">Email <span class="text-danger">*</span></label>
+                    //             <input type="email" class="form-control" name="email[]" required placeholder="Email">
+                    //         </div>
+                    //     </div>
+                    // </div>
+                    + `
                     <div class="row">
                         <div class="col-md-5">
                             <div class="mb-2">
@@ -580,88 +606,104 @@
                             <option value="Anak">Anak</option>
                             <option value="Lainnya">Lainnya</option>
                         </select>
-                    </div>
+                    </div>`
 
-                    <div class="mb-0 mt-2 alert alert-info py-1">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" id="addressSame${index}">
-                            <label class="form-check-label mb-0" for="addressSame${index}">Alamat sama dengan Kepala Keluarga</label>
-                        </div>
-                    </div>
+                    // <div class="mb-0 mt-2 alert alert-info py-1">
+                    //     <div class="form-check form-check-inline">
+                    //         <input class="form-check-input" type="checkbox" id="addressSame${index}">
+                    //         <label class="form-check-label mb-0" for="addressSame${index}">Alamat sama dengan Kepala Keluarga</label>
+                    //     </div>
+                    // </div>
+                    + `
                     <div class="row">
-                        <div class="col-6">
-                            <div class="mb-2" id="containerProvince${index}">
-                                <label for="">Provinsi <span class="text-danger">*</span></label>
-                                <select name="province[${index}]" id="province${index}" class="form-select" required>
-                                    <option>-- Pilih Provinsi</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="mb-2" id="containerCity${index}">
-                                <label for="">Kab/Kota <span class="text-danger">*</span></label>
-                                <select name="city[${index}]" id="city${index}" class="form-select" required>
-                                    <option>-- Pilih Kab/Kota</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="mb-2" id="containerSubdistrict${index}">
-                                <label for="">Kecamatan <span class="text-danger">*</span></label>
-                                <select name="subdistrict[${index}]" id="subdistrict${index}" class="form-select" required>
-                                    <option>-- Pilih Kecamatan</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="mb-2" id="containerVillage${index}">
-                                <label for="">Kelurahan <span class="text-danger">*</span></label>
-                                <select name="village[${index}]" id="village${index}" class="form-select" required>
-                                    <option>-- Pilih Kelurahan</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="col-6">
                             <div class="mb-2">
                                 <label for="">RT <span class="text-danger">*</span></label>
-                                <input type="number" id="rt${index}" class="form-control" name="rt[]" required placeholder="RT">
+                                <!-- <input type="number" id="rt" class="form-control" name="rt[]" required placeholder="RT"> -->
+                                <?= generateInput($settings['perum_rt'], 'rt[]') ?>
+
                             </div>
                         </div>
 
                         <div class="col-6">
                             <div class="mb-2">
                                 <label for="">RW <span class="text-danger">*</span></label>
-                                <input type="number" id="rw${index}" class="form-control" name="rw[]" required placeholder="RW">
+                                <!-- <input type="number" id="rw" class="form-control" name="rw[]" required placeholder="RW"> -->
+                                <?= generateInput($settings['perum_rw'], 'rw[]') ?>
                             </div>
                         </div>
-                    </div>
+                        
+                        <div class="mb-2">
+                            <label for="">No Rumah <span class="text-danger">*</span></label>
 
-                    <div class="mb-2">
-                        <label for="">Alamat <span class="text-danger">*</span></label>
-                        <textarea name="address[]" id="address${index}" cols="30" rows="2" class="form-control" required placeholder="Contoh: Perum Kertamukti Sakti Blok Z99 no 99"></textarea>
-                    </div>
-                </div>
+                            <div class="input-group">
+                                <?= generateInput($settings['perum_bloks'], 'blok[]') ?>
+                                <?= generateInput($settings['perum_blok_number'], 'blok_number[]') ?>
+                                <span class="input-group-text">No</span>
+                                <?= generateInput($settings['perum_home_number'], 'home_number[]') ?>
+                            </div>
+                        </div>
+                    </div>`
+                        
+                        // <div class="col-6">
+                        //     <div class="mb-2" id="containerProvince${index}">
+                        //         <label for="">Provinsi <span class="text-danger">*</span></label>
+                        //         <select name="province[${index}]" id="province${index}" class="form-select" required>
+                        //             <option>-- Pilih Provinsi</option>
+                        //         </select>
+                        //     </div>
+                        // </div>
+
+                        // <div class="col-6">
+                        //     <div class="mb-2" id="containerRegency${index}">
+                        //         <label for="">Kab/Kota <span class="text-danger">*</span></label>
+                        //         <select name="regency[${index}]" id="regency${index}" class="form-select" required>
+                        //             <option>-- Pilih Kab/Kota</option>
+                        //         </select>
+                        //     </div>
+                        // </div>
+
+                        // <div class="col-6">
+                        //     <div class="mb-2" id="containerDistrict${index}">
+                        //         <label for="">Kecamatan <span class="text-danger">*</span></label>
+                        //         <select name="district[${index}]" id="district${index}" class="form-select" required>
+                        //             <option>-- Pilih Kecamatan</option>
+                        //         </select>
+                        //     </div>
+                        // </div>
+
+                        // <div class="col-6">
+                        //     <div class="mb-2" id="containerVillage${index}">
+                        //         <label for="">Kelurahan <span class="text-danger">*</span></label>
+                        //         <select name="village[${index}]" id="village${index}" class="form-select" required>
+                        //             <option>-- Pilih Kelurahan</option>
+                        //         </select>
+                        //     </div>
+                        // </div>
+                    
+                    
+                    // <div class="mb-2">
+                    //     <label for="">Alamat <span class="text-danger">*</span></label>
+                    //     <textarea name="address[]" id="address${index}" cols="30" rows="2" class="form-control" required placeholder="Contoh: Perum Kertamukti Sakti Blok Z99 no 99"></textarea>
+                    // </div>
+                + `</div>
             </div>
         </div>
         `;
 
-        
+
         $("#container-family").append(html);
     }
 
     $("#add-family").on('click', function() {
-        var index = $('input[name="username[]"]').length;
+        var index = $('input[name="no_ktp[]"]').length;
         $("#removeMember").data('target_id', index).remove()
 
         var removeButton = `<button class="btn btn-danger mb-0" id="removeMember" data-target_id="${index}" type="button"><i class="fas fa-times"></i> Anggota Terakhir</button>`
         $('#containerButtonForm').prepend(removeButton);
 
         addFamily(index);
-        getProvince(index);
+        // getProvince(index);
     })
 </script>
 <?= $this->endSection('script'); ?>

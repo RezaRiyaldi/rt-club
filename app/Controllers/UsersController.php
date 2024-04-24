@@ -6,8 +6,9 @@ use App\Controllers\BaseController;
 use App\Models\GroupModel2;
 use App\Models\UserModel2;
 use App\Models\WargaModel;
-use CodeIgniter\HTTP\ResponseInterface;
 use Config\Database;
+
+// use function App\Helpers\generateInput;
 
 class UsersController extends BaseController
 {
@@ -89,9 +90,14 @@ class UsersController extends BaseController
 
     public function addUser()
     {
+        $setting = service('setting');
+        $settings = $setting->getAllSettings();
+
         $data = [
-            'title' => 'Edit User',
+            'title' => 'Tambah User',
             'url' => '/users-man/add',
+            'family' => NULL,
+            'settings' => $settings,
         ];
 
         return view('users_management/form', $data);
@@ -101,12 +107,13 @@ class UsersController extends BaseController
     {
         $type = "";
         $message = "";
+        $setting = service('setting');
 
         $dataForm = $this->request->getPost();
         $keys = array_keys($dataForm);
 
         $data = [];
-        for ($i = 0; $i < count($dataForm['username']); $i++) {
+        for ($i = 0; $i < count($dataForm['no_ktp']); $i++) {
             foreach ($keys as $key) {
                 $field = $dataForm[$key];
                 if (is_array($field)) {
@@ -122,37 +129,41 @@ class UsersController extends BaseController
 
         try {
             foreach ($data as $d) {
-                // INSERT USER
-                $insert_user = [];
-                $insert_user['username'] = $d['username'];
-                $insert_user['email'] = $d['email'];
-                $insert_user['active'] = 1;
-                $insert_user['password_hash'] = password_hash(
-                    base64_encode(
-                        hash('sha384', date('dmY', strtotime($d['birth_of_day'])), true)
-                    ),
-                    PASSWORD_DEFAULT
-                );
-                $userId = $this->userModel->insert($insert_user);
+                $userId = NULL;
+                if ($d['status_family'] == "Kepala Keluarga") {
+                    $username = $d['blok'] . $d['blok_number'] . "/" . $d['home_number'];
+                    $password = password_hash(
+                        base64_encode(
+                            hash('sha384', strtolower($username), true)
+                        ),
+                        PASSWORD_DEFAULT
+                    );
+
+                    // INSERT USER
+                    $insert_user = [];
+                    $insert_user['username'] = $username;
+                    $insert_user['email'] = NULL;
+                    $insert_user['active'] = 1;
+                    $insert_user['password_hash'] = $password;
+
+                    $userId = $this->userModel->insert($insert_user);
+
+                    $this->groupModel->addUserToGroup($userId, 3); // WARGA
+                }
 
                 $d['address'] = json_encode([
-                    'alamat' => $d['address'],
-                    'provinsi' => $d['province'],
-                    'kota' => $d['city'],
-                    'kecamatan' => $d['subdistrict'],
-                    'kelurahan' => $d['village'],
+                    'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $d['blok'] . $d['blok_number'] . " No " . $d['home_number'],
+                    'provinsi' => 'JAWA BARAT',
+                    'kota' => 'KABUPATEN BEKASI',
+                    'kecamatan' => 'CIBITUNG',
+                    'kelurahan' => 'KERTAMUKTI',
+                    'kode_pos' => 17520,
                     'rt' => str_pad($d['rt'], 3, "0", STR_PAD_LEFT),
                     'rw' => str_pad($d['rw'], 3, "0", STR_PAD_LEFT),
                 ]);
 
                 // INSERT WARGA
                 unset($d['csrf_test_name']);
-                unset($d['username']);
-                unset($d['email']);
-                unset($d['province']);
-                unset($d['city']);
-                unset($d['subdistrict']);
-                unset($d['village']);
                 unset($d['rt']);
                 unset($d['rw']);
 
@@ -175,6 +186,7 @@ class UsersController extends BaseController
                 $message = "Gagal menambahkan users";
             }
         } catch (\Exception $e) {
+            // dd($e);
             $db->transRollback();
 
             $type = "errors";
@@ -213,6 +225,7 @@ class UsersController extends BaseController
         $data = [
             'title' => 'Edit User',
             'url' => '/users-man/edit',
+            'family' => $family
         ];
 
         return view('users_management/form', $data);

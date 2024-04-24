@@ -14,7 +14,7 @@
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" width="5%">No</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Username</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jabatan</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Joined</th>
                                 <th class="text-secondary opacity-7">#</th>
@@ -81,7 +81,7 @@
                 className: 'text-sm font-weight-bold'
             },
             {
-                data: 'email',
+                data: 'fullname',
                 className: 'text-sm font-weight-bold'
             },
             {

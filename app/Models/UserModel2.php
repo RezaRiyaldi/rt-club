@@ -6,6 +6,12 @@ use Myth\Auth\Models\UserModel;
 
 class UserModel2 extends UserModel
 {
+    protected $validationRules = [
+        // 'email'         => 'valid_email|is_unique[users.email,id,{id}]',
+        'username'      => 'required|min_length[3]|max_length[30]|is_unique[users.username,id,{id}]',
+        'password_hash' => 'required',
+    ];
+
     public function getUsers($params = [])
     {
         $builder = $this->table($this->table);
