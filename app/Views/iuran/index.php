@@ -31,7 +31,9 @@
                                 <th class="text-secondary text-sm font-weight-bolder opacity-7">Tipe Iuran</th>
                                 <th class="text-secondary text-sm font-weight-bolder opacity-7">Nama Warga</th>
                                 <th class="text-secondary text-sm font-weight-bolder opacity-7">Metode Bayar</th>
-                                <th class="text-secondary text-sm font-weight-bolder opacity-7">Tanggal</th>
+                                <th class="text-secondary text-sm font-weight-bolder opacity-7">Periode</th>
+                                <th class="text-secondary text-sm font-weight-bolder opacity-7">Nominal</th>
+                                <th class="text-secondary text-sm font-weight-bolder opacity-7">Status</th>
                                 <th class="text-secondary text-sm font-weight-bolder opacity-7" width="5%">#</th>
                             </tr>
                         </thead>
@@ -67,11 +69,19 @@
             },
             {
                 data: 'payment_method',
+                className: 'text-sm font-weight-bold text-center'
+            },
+            {
+                data: 'periode',
+                className: 'text-sm font-weight-bold text-center'
+            },
+            {
+                data: 'nominal',
                 className: 'text-sm font-weight-bold'
             },
             {
-                data: 'date',
-                className: 'text-sm font-weight-bold text-center'
+                data: 'status_kas',
+                className: 'text-sm font-weight-bold'
             },
             {
                 data: 'action',
@@ -92,6 +102,13 @@
                     window.location.href = "<?= base_url() ?>iuran/add";
                 },
                 class: 'btn btn-sm btn-success'
+            },
+            {
+                text: "<i class='fas fa-plus'></i> Tipe Iuran",
+                action: function() {
+                    window.location.href = "<?= base_url() ?>iuran/type";
+                },
+                class: 'btn btn-sm btn-secondary'
             },
         ]
     })

@@ -13,7 +13,7 @@ class IuranModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'type_id', 'warga_id', 'nominal', 'payment_method', 'bukti_bayar', 'description', 'created_by', 'updated_by'
+        'type_id', 'warga_id', 'nominal', 'payment_method', 'bukti_bayar', 'description', 'created_by', 'updated_by', 'periode'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -47,6 +47,15 @@ class IuranModel extends Model
         $builder = $builder->select('iurans.*, it.type, w.fullname');
         $builder = $builder->join('iuran_type it', 'it.id = iurans.type_id', 'inner');
         $builder = $builder->join('wargas w', 'w.id = iurans.warga_id', 'inner');
+
+        // Ekstraksi bulan dan tahun dari kolom periode
+        $builder = $builder->select("MONTH(periode) as bulan, YEAR(periode) as tahun");
+
+        // Grupkan berdasarkan bulan dan tahun
+        $builder = $builder->groupBy(['iurans.warga_id', 'bulan', 'tahun']);
+
+        // Menghitung jumlah nominal untuk setiap kelompok
+        $builder = $builder->selectSum('iurans.nominal');
 
         if (!empty($params['search'])) {
             if (!empty($params['columns'])) {

@@ -60,19 +60,16 @@ $routes->group('/iuran', function($routes) {
     $routes->get('add', 'IuranController::addIuran');
     $routes->post('add', 'IuranController::processAddIuran');
 
+    $routes->get('edit/(:any)', 'IuranController::editIuran/$1');
+    $routes->post('edit/(:any)', 'IuranController::processEditIuran/$1');
+
+    $routes->get('detail/(:any)/(:any)', 'IuranController::detailIuran/$1/$2');
+
     $routes->get('type', 'IuranController::iuranType');
     $routes->post('type/add', 'IuranController::processAddTypeIuran');
 
     $routes->get('type/get-detail', 'IuranController::getDetailTypeIuran');
     $routes->post('type/edit/(:any)', 'IuranController::processEditTypeIuran/$1');
-    
-
-    // $routes->get('detail/(:any)', 'GroupController::detailGroup/$1');
-
-    // $routes->get('edit/(:any)', 'GroupController::editGroup/$1');
-    // $routes->post('edit/(:any)', 'GroupController::processEditGroup/$1');
-
-    // $routes->post('assign', 'GroupController::assignUserGroup');
 });
 
 // GET REGIONS

@@ -218,6 +218,9 @@ class UsersController extends BaseController
     {
         $userId = base64_decode($userId);
 
+        $setting = service('setting');
+        $settings = $setting->getAllSettings();
+
         $user = $this->userModel->getUserById($userId);
 
         $family = $this->userModel->getUserByKK($user->no_kk);
@@ -225,6 +228,7 @@ class UsersController extends BaseController
         $data = [
             'title' => 'Edit User',
             'url' => '/users-man/edit',
+            'settings' => $settings,
             'family' => $family
         ];
 
