@@ -28,18 +28,18 @@
         ?>
     </title>
     <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="<?= base_url() ?>assets/css/font-opensans.css" rel="stylesheet" />
     <!-- Nucleo Icons -->
     <link href="<?= base_url() ?>assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="<?= base_url() ?>assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <script src="<?= base_url() ?>assets/js/font-awesome.js" crossorigin="anonymous"></script>
     <!-- <script src="https://kit.fontawesome.com/8ac8e75fb4.js" crossorigin="anonymous"></script> -->
     <link href="<?= base_url() ?>assets/css/nucleo-svg.css" rel="stylesheet" />
 
     <!-- DATATABLE -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/css/datatables-bootstrap.css">
 
     <!-- CSS Files -->
     <link id="pagestyle" href="<?= base_url() ?>assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
@@ -78,17 +78,17 @@
     <script src="<?= base_url() ?>assets/js/plugins/chartjs.min.js"></script>
 
     <!-- DATATABLE -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="<?= base_url() ?>assets/js/jquery.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
-    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script>
+    <script src="<?= base_url() ?>assets/js/datatables.js"></script>
+    <script src="<?= base_url() ?>assets/js/datatables-bs5.js"></script>
+    <script src="<?= base_url() ?>assets/js/datatables-button.js"></script>
+    <script src="<?= base_url() ?>assets/js/button-datatables.js"></script>
+    <script src="<?= base_url() ?>assets/js/jszip-datatables.js"></script>
+    <script src="<?= base_url() ?>assets/js/pdfmake-datatables.js"></script>
+    <script src="<?= base_url() ?>assets/js/button-html5-datatables.js"></script>
+    <script src="<?= base_url() ?>assets/js/button-datatables.js"></script>
+    <script src="<?= base_url() ?>assets/js/button-print-datatables.js"></script>
 
     <script src="<?= base_url() ?>assets/js/core/core.js"></script>
 

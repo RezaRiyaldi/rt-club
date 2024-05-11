@@ -4,9 +4,9 @@ $request = service('request')->uri->getSegment(1);
 <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link <?= $request == '' ? 'active' : '' ?>" href="<?= base_url() ?>">
+            <a class="nav-link <?= $request == '' || $request == 'setting-self' ? 'active' : '' ?>" href="<?= base_url() ?>">
                 <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-home <?= $request == '' ? '' : 'text-dark' ?>"></i>
+                    <i class="fas fa-home <?= $request == '' || $request == 'setting-self' ? '' : 'text-dark' ?>"></i>
                 </div>
                 <span class="nav-link-text ms-1">Dashboard</span>
             </a>
@@ -22,22 +22,26 @@ $request = service('request')->uri->getSegment(1);
                 <span class="nav-link-text ms-1">Users Management</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link <?= $request == 'groups-man' ? 'active' : '' ?>" href="<?= base_url() ?>groups-man">
-                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-users-cog <?= $request == 'groups-man' ? '' : 'text-dark' ?>"></i>
-                </div>
-                <span class="nav-link-text ms-1">Groups Management</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link <?= $request == 'settings-man' ? 'active' : '' ?>" href="<?= base_url() ?>settings-man">
-                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                    <i class="fas fa-cog <?= $request == 'settings-man' ? '' : 'text-dark' ?>"></i>
-                </div>
-                <span class="nav-link-text ms-1">Settings Management</span>
-            </a>
-        </li>
+        <?php if (in_groups(['Superadmin', 'Ketua RT'])) : ?>
+            <li class="nav-item">
+                <a class="nav-link <?= $request == 'groups-man' ? 'active' : '' ?>" href="<?= base_url() ?>groups-man">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-users-cog <?= $request == 'groups-man' ? '' : 'text-dark' ?>"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Groups Management</span>
+                </a>
+            </li>
+            <?php if (in_groups('Superadmin')) : ?>
+                <li class="nav-item">
+                    <a class="nav-link <?= $request == 'settings-man' ? 'active' : '' ?>" href="<?= base_url() ?>settings-man">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-cog <?= $request == 'settings-man' ? '' : 'text-dark' ?>"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Settings Management</span>
+                    </a>
+                </li>
+            <?php endif ?>
+        <?php endif ?>
         <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Keuangan</h6>
         </li>
@@ -47,6 +51,14 @@ $request = service('request')->uri->getSegment(1);
                     <i class="fas fa-money-bill <?= $request == 'iuran' ? '' : 'text-dark' ?>"></i>
                 </div>
                 <span class="nav-link-text ms-1">Iuran Warga</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $request == 'pengeluaran' ? 'active' : '' ?>" href="<?= base_url() ?>pengeluaran">
+                <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="fas fa-wallet <?= $request == 'pengeluaran' ? '' : 'text-dark' ?>"></i>
+                </div>
+                <span class="nav-link-text ms-1">Pengeluaran</span>
             </a>
         </li>
         <!-- <li class="nav-item">

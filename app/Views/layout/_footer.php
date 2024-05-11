@@ -8,7 +8,7 @@
                     </script>
                     <i class="fa fa-heart"></i> by
                     <a href="https://instagram.com/boykucayy" class="font-weight-bold" target="_blank">Boykucayy</a>
-                    for a better archive file management K-Sakti.
+                    for a better archive file management <?= service('setting')->getSetting('application_name') ?>.
                 </div>
             </div>
             <!-- <div class="col-lg-6">

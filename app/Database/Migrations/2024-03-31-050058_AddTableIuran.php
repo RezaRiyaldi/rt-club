@@ -61,6 +61,10 @@ class AddTableIuran extends Migration
                 'type'           => 'TEXT',
                 'null'           => true,
             ],
+            'periode' => [
+                'type'           => 'DATE',
+                'null'           => true,
+            ],
             'created_at' => [
                 'type'           => 'DATETIME',
                 'null'           => true,

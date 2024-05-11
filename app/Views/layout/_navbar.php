@@ -18,6 +18,11 @@
                     </a>
                     <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropUserButton">
                         <li class="">
+                            <a class="dropdown-item border-radius-md" href="<?= base_url('setting-self') ?>">
+                                Setting Akun
+                            </a>
+                        </li>
+                        <li class="">
                             <a class="dropdown-item border-radius-md" href="<?= base_url('logout') ?>">
                                 Logout
                             </a>
@@ -33,12 +38,11 @@
                         </div>
                     </a>
                 </li>
-                <li class="nav-item px-3 d-flex align-items-center">
+                <!-- <li class="nav-item px-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0">
                         <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
                     </a>
-                </li>
-                <?= $this->include('layout/_notifications'); ?>
+                </li> -->
             </ul>
         </div>
     </div>

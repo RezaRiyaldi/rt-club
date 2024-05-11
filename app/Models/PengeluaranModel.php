@@ -4,16 +4,16 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class IuranModel extends Model
+class PengeluaranModel extends Model
 {
-    protected $table            = 'iurans';
+    protected $table            = 'pengeluarans';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'type_id', 'warga_id', 'nominal', 'payment_method', 'bukti_bayar', 'description', 'created_by', 'updated_by', 'periode'
+        'pengeluaran', 'description', 'nominal', 'periode', 'created_by', 'created_at', 'updated_by', 'updated_at'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -42,16 +42,8 @@ class IuranModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function getIurans($params = []) {
-        $builder = $this->table($this->table);
-        $builder = $builder->select('iurans.*, it.type, w.fullname, u.id as user_id');
-        $builder = $builder->select("MONTH(periode) as bulan, YEAR(periode) as tahun");
-        $builder = $builder->selectSum('iurans.nominal');
-
-        $builder = $builder->join('iuran_type it', 'it.id = iurans.type_id', 'inner');
-        $builder = $builder->join('wargas w', 'w.id = iurans.warga_id', 'inner');
-        $builder = $builder->join('users u', 'u.id = w.user_id', 'inner');
-        $builder = $builder->groupBy(['iurans.warga_id', 'bulan', 'tahun']);
+    public function getPengeluarans($params) {
+        $builder = $this->table($this->table);        
 
         if (!empty($params['search'])) {
             if (!empty($params['columns'])) {
@@ -77,14 +69,5 @@ class IuranModel extends Model
         }
 
         return $builder->get()->getResult();
-    }
-
-    public function getAliasColumn($column)
-    {
-        if ($column == 'date') {
-            $column = 'iurans.created_at';
-        }
-
-        return $column;
     }
 }

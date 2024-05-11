@@ -60,13 +60,15 @@ class UsersController extends BaseController
 
             $actions = [];
 
-            if (isset($d['no_kk'])) {
+            if (isset($d['no_kk']) && ($d['id_user'] == user()->id || in_groups(['Superadmin', 'Ketua RT', 'Bendahara']))) {
                 $actions[] = '<a href="' . base_url('users-man/detail/' . base64_encode($d['no_kk'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail User"><i class="fas fa-eye"></i></a>';
             }
 
-            $actions[] = '<a href="' . base_url('/users-man/edit/' . base64_encode($d['id_user'])) . '" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>';
-
-            $actions[] = '<button style="background-color: orangered" class="btn btn-sm text-light px-2 py-1 mb-0 assign-group" data-id="' . base64_encode($d['id_user']) . '" data-fullname="' . $d['fullname'] . '" data-username="' . $d['username'] . '" data-toggle="tooltip" title="Masukan ke Grup"><i class="fas fa-link"></i></button>';
+            if (in_groups(['Superadmin', 'Ketua RT'])) {
+                $actions[] = '<a href="' . base_url('/users-man/edit/' . base64_encode($d['id_user'])) . '" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0 btn-edit" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>';
+    
+                $actions[] = '<button style="background-color: orangered" class="btn btn-sm text-light px-2 py-1 mb-0 assign-group" data-id="' . base64_encode($d['id_user']) . '" data-fullname="' . $d['fullname'] . '" data-username="' . $d['username'] . '" data-toggle="tooltip" title="Masukan ke Grup"><i class="fas fa-link"></i></button>';
+            }
 
             $d['action'] = implode('', $actions);
             $arr[] = $d;

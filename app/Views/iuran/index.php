@@ -17,11 +17,7 @@
 </ul>
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="iuranWarga-tab-pane" role="tabpanel" aria-labelledby="iuranWarga-tab" tabindex="0">
-
         <div class="card border" style="border-radius: 0; border-top: 0 !important">
-            <!-- <div class="card-header pb-0 border-bottom">
-                <h6>Iuran Warga</h6>
-            </div> -->
             <div class="card-body">
                 <div class="table-responsive pb-0">
                     <table class="table" id="iuran-warga">
@@ -42,9 +38,6 @@
             </div>
         </div>
     </div>
-    <!-- <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
-    <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
-    <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div> -->
 </div>
 
 <?= $this->endSection('content'); ?>
@@ -101,16 +94,22 @@
                 action: function() {
                     window.location.href = "<?= base_url() ?>iuran/add";
                 },
-                class: 'btn btn-sm btn-success'
+                class: 'btn btn-sm btn-success btn-add'
             },
             {
                 text: "<i class='fas fa-plus'></i> Tipe Iuran",
                 action: function() {
                     window.location.href = "<?= base_url() ?>iuran/type";
                 },
-                class: 'btn btn-sm btn-secondary'
+                class: 'btn btn-sm btn-secondary btn-add-type'
             },
         ]
     })
 </script>
+
+<?php if (!in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) : ?>
+    <script>
+        $(".btn-add, .btn-add-type").remove();
+    </script>
+<?php endif ?>
 <?= $this->endSection('script'); ?>

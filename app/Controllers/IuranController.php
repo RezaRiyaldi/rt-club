@@ -46,7 +46,10 @@ class IuranController extends BaseController
             $d['no'] = $no++;
 
             $actions = [];
-            $actions[] = '<a href="' . base_url('iuran/detail/' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail User"><i class="fas fa-eye"></i></a>';
+            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara']) || $d['user_id'] == user()->id) {
+                $actions[] = '<a href="' . base_url('iuran/detail/' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail User"><i class="fas fa-eye"></i></a>';
+            }
+                
             // $actions[] = '<a href="' . base_url('iuran/edit/' . base64_encode($d['id'])) . '" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>';
 
             $d['action'] = implode('', $actions);
@@ -229,8 +232,6 @@ class IuranController extends BaseController
         } catch (Exception $e) {
             $message = $e;
             $type = 'error';
-
-            dd($e);
         }
 
         return redirect('iuran')->with($type, $message);

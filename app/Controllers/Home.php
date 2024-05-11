@@ -8,4 +8,8 @@ class Home extends BaseController
     {
         return view('dashboard/index');
     }
+
+    public function not_permission() {
+        return view('errors/custom/not_permission');
+    }
 }

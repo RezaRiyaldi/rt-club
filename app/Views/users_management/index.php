@@ -71,8 +71,7 @@
         id: $("#users-management"),
         url: "<?= base_url() ?>users-man/get_list",
         method: 'POST',
-        columns: [
-            {
+        columns: [{
                 data: 'no',
                 className: 'text-sm font-weight-bold text-center'
             },
@@ -109,7 +108,7 @@
             action: function() {
                 window.location.href = "<?= base_url() ?>users-man/add";
             },
-            class: 'btn btn-sm btn-success'
+            class: 'btn btn-sm btn-success btn-add'
         }, ]
     })
 
@@ -124,4 +123,10 @@
         $("#fullname").val(fullname != "" ? fullname : username);
     })
 </script>
+
+<?php if (!in_groups(['Superadmin', 'Ketua RT'])) : ?>
+    <script>
+        $(".btn-add").remove();
+    </script>
+<?php endif ?>
 <?= $this->endSection('script'); ?>
