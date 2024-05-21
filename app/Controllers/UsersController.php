@@ -53,6 +53,8 @@ class UsersController extends BaseController
         foreach ($data as $d) {
             $d = (array) $d;
             $d['no'] = $no++;
+            $d['no_rumah'] = !empty($d['blok']) ? $d['blok'] : '-';
+            $d['no_hp'] = !empty($d['phone']) ? $d['phone'] : '-';
 
             $d['joined'] = date('H:s, d M Y', strtotime($d['joined']));
 
@@ -65,22 +67,21 @@ class UsersController extends BaseController
             }
 
             if (in_groups(['Superadmin', 'Ketua RT'])) {
-                $actions[] = '<a href="' . base_url('/users-man/edit/' . base64_encode($d['id_user'])) . '" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0 btn-edit" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>';
-    
-                $actions[] = '<button style="background-color: orangered" class="btn btn-sm text-light px-2 py-1 mb-0 assign-group" data-id="' . base64_encode($d['id_user']) . '" data-fullname="' . $d['fullname'] . '" data-username="' . $d['username'] . '" data-toggle="tooltip" title="Masukan ke Grup"><i class="fas fa-link"></i></button>';
+                $actions[] = '<a href="' . base_url('/users-man/edit/' . base64_encode($d['no_kk'])) . '" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0 btn-edit" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>';
+                $actions[] = '<button style="background-color: orangered" class="btn btn-sm text-light px-2 py-1 me-1 mb-0 assign-group" data-id="' . base64_encode($d['id_user']) . '" data-fullname="' . $d['fullname'] . '" data-username="' . $d['username'] . '" data-toggle="tooltip" title="Masukan ke Grup"><i class="fas fa-link"></i></button>';
+                $actions[] = '<button class="btn btn-sm btn-primary px-2 py-1 mb-0 edit-account" data-id="' . base64_encode($d['id_user']) . '" data-email="' . $d['email'] . '" data-username="' . $d['username'] . '" data-toggle="tooltip" title="Edit akun user"><i class="fas fa-user-edit"></i></button>';
             }
 
             $d['action'] = implode('', $actions);
             $arr[] = $d;
         }
 
-        $total_count_filter = count($data);
         $total_count_all = count($this->userModel->getUsers($param['search']));
 
         $res = [
             'draw' => intval($param['draw']),
             'recordsTotal' => $total_count_all,
-            'recordsFiltered' => $total_count_filter,
+            'recordsFiltered' => $total_count_all,
             'data' => $arr
         ];
 
@@ -119,7 +120,7 @@ class UsersController extends BaseController
             foreach ($keys as $key) {
                 $field = $dataForm[$key];
                 if (is_array($field)) {
-                    $data[$i][$key] = $field[$i];
+                    $data[$i][$key] = $field[$i] ?? NULL;
                 } else {
                     $data[$i][$key] = $field;
                 }
@@ -130,10 +131,19 @@ class UsersController extends BaseController
         $db->transBegin();
 
         try {
+            $rt = $rw = $blok = $email = $fullnameKepala = NULL;
             foreach ($data as $d) {
                 $userId = NULL;
+
                 if ($d['status_family'] == "Kepala Keluarga") {
+                    $rt = $d['rt'];
+                    $rw = $d['rw'];
+                    $blok = $d['blok'] . $d['blok_number'] . " No " . $d['home_number'];
                     $username = $d['blok'] . $d['blok_number'] . "/" . $d['home_number'];
+                    $email = $d['email'];
+                    $fullnameKepala = $d['fullname'];
+                    $d['blok'] = $blok;
+
                     $password = password_hash(
                         base64_encode(
                             hash('sha384', strtolower($username), true)
@@ -144,30 +154,36 @@ class UsersController extends BaseController
                     // INSERT USER
                     $insert_user = [];
                     $insert_user['username'] = $username;
-                    $insert_user['email'] = NULL;
+                    $insert_user['email'] = !empty($d['email']) ? $d['email'] : NULL;
                     $insert_user['active'] = 1;
                     $insert_user['password_hash'] = $password;
 
                     $userId = $this->userModel->insert($insert_user);
 
                     $this->groupModel->addUserToGroup($userId, 3); // WARGA
+                } else {
+                    $d['blok'] = $blok;
                 }
 
                 $d['address'] = json_encode([
-                    'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $d['blok'] . $d['blok_number'] . " No " . $d['home_number'],
+                    'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $blok,
                     'provinsi' => 'JAWA BARAT',
                     'kota' => 'KABUPATEN BEKASI',
                     'kecamatan' => 'CIBITUNG',
                     'kelurahan' => 'KERTAMUKTI',
                     'kode_pos' => 17520,
-                    'rt' => str_pad($d['rt'], 3, "0", STR_PAD_LEFT),
-                    'rw' => str_pad($d['rw'], 3, "0", STR_PAD_LEFT),
+                    'rt' => str_pad($rt, 3, "0", STR_PAD_LEFT),
+                    'rw' => str_pad($rw, 3, "0", STR_PAD_LEFT),
                 ]);
+
+                $d['created_by'] = $d['updated_by'] = user()->id;
 
                 // INSERT WARGA
                 unset($d['csrf_test_name']);
                 unset($d['rt']);
                 unset($d['rw']);
+                unset($d['blok_number']);
+                unset($d['home_number']);
 
                 $insert_warga = [];
                 $insert_warga['user_id'] = $userId;
@@ -181,7 +197,17 @@ class UsersController extends BaseController
             if ($db->transStatus()) {
                 $db->transCommit();
                 $type = "message";
-                $message = "Berhasil menambahkan users";
+
+                $email = !empty($email) ? $email : '-';
+                $message = "Berhasil menambahkan users!!<br>
+                            <h5>Informasi Akun untuk keperluan Login:</h5>
+                            <ul>
+                                <li>Fullname: $fullnameKepala</li>
+                                <li>Email: $email</li>
+                                <li>Username: $username</li>
+                                <li>Password: " . strtolower($username) . "</li>
+                            </ul>
+                            <i>Mohon informasikan akun ini kepada warga terkait.</i>";
             } else {
                 $db->transRollback();
                 $type = "error";
@@ -202,38 +228,165 @@ class UsersController extends BaseController
     {
         $kk = base64_decode($kk);
 
+        // $db = Database::connect();
+
         $family = $this->userModel->getUserByKK($kk);
         $leadFamily = $family[0];
         $leadAddress = json_decode($leadFamily->address);
+        $userRTs = $this->groupModel->getUsersForGroup(2);
+
+        $idKetuaRTs = [];
+        foreach ($userRTs as $userRT) {
+            $idKetuaRTs[] = $userRT['id'];
+        }
+
+        $ketuaRTs = $this->wargaModel->select('fullname')
+            ->whereIn('user_id', $idKetuaRTs)
+            ->get()->getResultArray();
+
+        $namaKetuaRTs = array_column($ketuaRTs, 'fullname');
+
+        $ketuaRT = implode(', ', $namaKetuaRTs);
 
         $data = [
             'lead_family' => $leadFamily,
             'lead_address' => $leadAddress,
             'family' => $family,
-            'no_kk' => $kk
+            'no_kk' => $kk,
+            'ketua_rt' => $ketuaRT
         ];
 
         return view('users_management/detail', $data);
     }
 
-    public function editUser($userId)
+    public function editUser($noKK)
     {
-        $userId = base64_decode($userId);
+        $noKK = base64_decode($noKK);
 
         $setting = service('setting');
         $settings = $setting->getAllSettings();
 
-        $user = $this->userModel->getUserById($userId);
+        $family = $this->userModel->getUserByKK($noKK);
 
-        $family = $this->userModel->getUserByKK($user->no_kk);
+        foreach ($family as $member) {
+            $member->address = null;
+        }
 
         $data = [
             'title' => 'Edit User',
             'url' => '/users-man/edit',
             'settings' => $settings,
-            'family' => $family
+            'family' => json_encode($family)
         ];
 
         return view('users_management/form', $data);
+    }
+
+    public function processEditUser()
+    {
+        $type = "";
+        $message = "";
+        $setting = service('setting');
+
+        $dataForm = $this->request->getPost();
+        $keys = array_keys($dataForm);
+
+        $data = [];
+        for ($i = 0; $i < count($dataForm['no_ktp']); $i++) {
+            foreach ($keys as $key) {
+                $field = $dataForm[$key];
+                if (is_array($field)) {
+                    $data[$i][$key] = $field[$i] ?? NULL;
+                } else {
+                    $data[$i][$key] = $field;
+                }
+            }
+        }
+
+        $db = Database::connect();
+        $db->transBegin();
+
+        try {
+            $rt = $rw = $blok = NULL;
+            foreach ($data as $d) {
+
+                if ($d['status_family'] == "Kepala Keluarga") {
+                    $rt = $d['rt'];
+                    $rw = $d['rw'];
+                    $blok = $d['blok'] . $d['blok_number'] . " No " . $d['home_number'];
+                    $d['blok'] = $blok;
+
+                    // EDIT EMAIL
+                    $user_id = $this->wargaModel->select('user_id')->find($d['id'])->user_id;
+                    $this->userModel->update($user_id, ['email' => $d['email']]);
+                } else {
+                    $d['blok'] = $blok;
+                }
+
+                $d['address'] = json_encode([
+                    'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $blok,
+                    'provinsi' => 'JAWA BARAT',
+                    'kota' => 'KABUPATEN BEKASI',
+                    'kecamatan' => 'CIBITUNG',
+                    'kelurahan' => 'KERTAMUKTI',
+                    'kode_pos' => 17520,
+                    'rt' => str_pad($rt, 3, "0", STR_PAD_LEFT),
+                    'rw' => str_pad($rw, 3, "0", STR_PAD_LEFT),
+                ]);
+
+                $d['updated_by'] = user()->id;
+
+                // UPDATE WARGA
+                unset($d['csrf_test_name']);
+                unset($d['rt']);
+                unset($d['rw']);
+                unset($d['blok_number']);
+                unset($d['home_number']);
+
+                $update_warga = [];
+                foreach ($d as $key => $val) {
+                    $update_warga[$key] = $val;
+                }
+
+                $this->wargaModel->update($d['id'], $update_warga);
+            }
+
+            if ($db->transStatus()) {
+                $db->transCommit();
+                $type = "message";
+                $message = "Berhasil edit users";
+            } else {
+                $db->transRollback();
+                $type = "error";
+                $message = "Gagal edit users";
+            }
+        } catch (\Exception $e) {
+            $db->transRollback();
+
+            $type = "errors";
+            $message = $e;
+        }
+
+        return redirect('users-man')->with($type, $message);
+    }
+
+    public function checkDuplicate()
+    {
+        $post = $this->request->getPost();
+
+        $blokUsed = $this->wargaModel->where('blok', $post['blok'])
+            ->whereNotIn('no_kk', [$post['no_kk']])
+            ->first();
+
+        // $nikUsed = $this->wargaModel->where('nik', $post['nik'])
+        //     ->whereNotIn('no_kk', [$post['no_kk']])
+        //     ->first();
+
+        $response = [
+            'status' => 'success',
+            'blokNotUsed' => $blokUsed === null
+        ];
+
+        return $this->response->setJSON($response);
     }
 }

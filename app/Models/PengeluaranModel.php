@@ -66,6 +66,8 @@ class PengeluaranModel extends Model
                     $builder = $builder->orderBy($params['columns'][$order['column']]['data'], $order['dir']);
                 }
             }
+        } else {
+            $builder = $builder->orderBy('periode', 'asc');
         }
 
         return $builder->get()->getResult();

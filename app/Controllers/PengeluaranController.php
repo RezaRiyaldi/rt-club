@@ -46,10 +46,11 @@ class PengeluaranController extends BaseController
             $d['nominal'] = 'Rp. ' . number_format($d['nominal'], 0, ',', '.');
 
             $action = [];
-            $action[] = '<a href="/pengeluaran/detail/' . base64_encode($d['id']) . '" class="btn btn-sm btn-secondary px-2"><i class="fas fa-eye"></i></a>';
+            $action[] = '<a href="/pengeluaran/detail/' . base64_encode($d['id']) . '" class="btn btn-sm btn-secondary px-2 py-1 mb-0"><i class="fas fa-eye"></i></a>';
             
             if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) {
-                $action[] = '<button data-id="' . base64_encode($d['id']) . '" class="btn btn-sm btn-warning px-2 btn-edit"><i class="fas fa-pen"></i></button>';
+                $action[] = '<button data-id="' . base64_encode($d['id']) . '" class="btn btn-sm btn-warning px-2 py-1 btn-edit mb-0"><i class="fas fa-pen"></i></button>';
+                $action[] = '<button data-id="' . base64_encode($d['id']) . '" class="btn btn-sm btn-danger px-2 py-1 btn-delete mb-0" data-name="' . $d['pengeluaran'] . '" data-amount="' . $d['nominal'] . '"><i class="fas fa-trash"></i></button>';
             }
 
             $d['action'] = implode('&nbsp;', $action);
@@ -63,7 +64,7 @@ class PengeluaranController extends BaseController
         $res = [
             'draw' => intval($param['draw']),
             'recordsTotal' => $total_count_all,
-            'recordsFiltered' => $total_count_filter,
+            'recordsFiltered' => $total_count_all,
             'data' => $arr
         ];
 
@@ -83,7 +84,7 @@ class PengeluaranController extends BaseController
         $dataInsert['nominal'] = str_replace('.', '', $post['nominal']);
         $dataInsert['periode'] = $post['periode'];
         $dataInsert['description'] = $post['description'];
-        $dataInsert['created_by'] = user()->id;
+        $dataInsert['created_by'] = $dataInsert['updated_by'] = user()->id;
 
         
         try {
@@ -101,7 +102,7 @@ class PengeluaranController extends BaseController
         $id = base64_decode($id);
         $pengeluaran = $this->pengeluaranModel
             ->select('pengeluarans.*, users.username')
-            ->join('users', 'users.id = pengeluarans.created_by')
+            ->join('users', 'users.id = pengeluarans.created_by', 'left')
             ->where('pengeluarans.id', $id)
             ->get()->getRow();
 
@@ -121,7 +122,7 @@ class PengeluaranController extends BaseController
         $dataUpdate['nominal'] = str_replace('.', '', $post['nominal']);
         $dataUpdate['periode'] = $post['periode'];
         $dataUpdate['description'] = $post['description'];
-        $dataUpdate['created_by'] = user()->id;
+        $dataUpdate['updated_by'] = user()->id;
 
         try {
             $this->pengeluaranModel->update($id, $dataUpdate);
@@ -132,5 +133,13 @@ class PengeluaranController extends BaseController
         }
 
         return redirect('pengeluaran')->with($type, $message);
+    }
+
+    public function processDeletePengeluaran($id) {
+        $id = base64_decode($id);
+
+        $this->pengeluaranModel->delete($id);
+
+        return redirect('pengeluaran')->with('message', 'Berhasil menghapus pengeluaran');
     }
 }

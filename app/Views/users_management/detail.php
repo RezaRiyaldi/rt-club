@@ -10,11 +10,15 @@
 
     <div class="card-body">
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
                 <table class="table table-sm">
                     <tr class="text-sm">
                         <th>Nama Kepala Keluarga</th>
                         <td>: <?= $lead_family->fullname ?></td>
+                    </tr>
+                    <tr class="text-sm">
+                        <th>Email</th>
+                        <td>: <?= $lead_family->email ?></td>
                     </tr>
                     <tr class="text-sm">
                         <th>Alamat</th>
@@ -24,15 +28,15 @@
                         <th>RT/RW</th>
                         <td>: <?= $lead_address->rt . " / " . $lead_address->rw ?></td>
                     </tr>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <table class="table table-sm">
                     <tr class="text-sm">
                         <th>Desa / Kelurahan</th>
                         <td>: <?= $lead_address->kelurahan ?></td>
                     </tr>
-                </table>
-            </div>
-
-            <div class="col-6">
-                <table class="table table-sm">
                     <tr class="text-sm">
                         <th>Kecamatan</th>
                         <td>: <?= $lead_address->kecamatan ?></td>
@@ -58,6 +62,7 @@
                         <th class="text-center">NIK</th>
                         <th>Status di Keluarga</th>
                         <th class="text-center">Jenis <br> Kelamin</th>
+                        <th class="text-center">No. HP</th>
                         <th>Tempat Lahir</th>
                         <th>Tanggal Lahir</th>
                         <th>Agama</th>
@@ -76,6 +81,7 @@
                             <td class="text-center"><?= $fams->no_ktp ?></td>
                             <td class="text-center"><?= $fams->status_family ?></td>
                             <td class="text-center"><?= $fams->gender ?></td>
+                            <td class="text-center"><?= $fams->phone != "" ? $fams->phone : '-' ?></td>
                             <td><?= $fams->place_of_birth ?></td>
                             <td class="text-center"><?= date('d-m-Y', strtotime($fams->birth_of_day)) ?></td>
                             <td><?= $fams->religion ?></td>
@@ -88,7 +94,7 @@
         </div>
 
         <div class="row">
-            <div class="col-4 ">
+            <div class="col-md-4 ">
                 <table class="mx-auto table table-sm">
                     <tr>
                         <td>Dimasukan pada</td>
@@ -96,7 +102,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-4 ">
+            <div class="col-md-4 ">
                 <table class="mx-auto table-sm text-center">
                     <tr>
                         <td>Kepala Keluarga</td>
@@ -109,7 +115,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-4 ">
+            <div class="col-md-4 ">
                 <table class="mx-auto table-sm text-center">
                     <tr>
                         <td>Ketua RT</td>
@@ -118,7 +124,12 @@
                         <td style="height: 60px;"></td>
                     </tr>
                     <tr>
-                        <th class="font-weigth-bolder text-decoration-underline">Bapak Gwehj</th>
+                        <?php if (!empty($ketua_rt)) : ?>
+                            <th class="font-weigth-bolder text-decoration-underline"><?= $ketua_rt ?></th>
+                        <?php else : ?>
+                            <td class="fst-italic">Belum ada Ketua RT</td>
+                        <?php endif ?>
+
                     </tr>
                 </table>
             </div>

@@ -60,7 +60,7 @@ class GroupController extends BaseController
         $res = [
             'draw' => intval($param['draw']),
             'recordsTotal' => $total_count_all,
-            'recordsFiltered' => $total_count_filter,
+            'recordsFiltered' => $total_count_all,
             'data' => $arr
         ];
 

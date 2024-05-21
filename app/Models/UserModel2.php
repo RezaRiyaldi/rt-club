@@ -71,6 +71,8 @@ class UserModel2 extends UserModel
     public function getUserByKK($kk)
     {
         $builder = $this->db->table('wargas')
+            ->select('wargas.*, u.email')
+            ->join('users u', 'u.id = wargas.user_id', 'left')
             ->where('wargas.no_kk', $kk)
             ->get()->getResult();
 

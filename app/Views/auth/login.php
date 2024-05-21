@@ -10,7 +10,7 @@
                 <h3 class="font-weight-bolder text-info text-gradient">
                     <?= $app_name; ?> Apps
                 </h3>
-                <p class="mb-0">Enter your email and password to sign in</p>
+                <p class="mb-0">Masukan username dan password untuk masuk ke aplikasi</p>
             </div>
             <div class="card-body">
                 <?= view('Myth\Auth\Views\_message_block') ?>

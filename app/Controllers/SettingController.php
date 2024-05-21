@@ -50,8 +50,14 @@ class SettingController extends BaseController
         $type = 'message';
         $message = 'Unknown';
 
-        $id = user()->id;
         $post = $this->request->getPost();
+
+        $id = user()->id;
+
+        if (isset($post['user_id_account'])) {
+            $id = base64_decode($post['user_id_account']);
+        }
+
         $userModel = new UserModel2();
         $validation = \Config\Services::validation();
 
@@ -84,18 +90,26 @@ class SettingController extends BaseController
             // Melakukan validasi
             if ($validation->run($dataUpdate)) {
                 $userModel->update($id, $dataUpdate);
-                $message = 'Berhasil setting akun, harap login kembali';
+                $message = 'Berhasil setting akun';
             } else {
                 $errors = $validation->getErrors();
 
                 $message = implode('<br>', $errors);
                 $type = 'error';
+
+                if (!isset($post['user_id_account'])) {
+                    return redirect()->to('setting-self')->with($type, $message);
+                }
             }
         } catch (\Exception $e) {
             $message = $e->getMessage();
             $type = 'error';
         }
 
-        return redirect()->to('setting-self')->with($type, $message);
+        if (isset($post['user_id_account'])) {
+            return redirect()->to('users-man')->with($type, $message);
+        }
+
+        return redirect()->to('/')->with($type, $message);
     }
 }

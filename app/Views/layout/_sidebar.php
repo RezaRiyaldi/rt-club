@@ -1,7 +1,7 @@
 <?php
 $request = service('request')->uri->getSegment(1);
 ?>
-<div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
+<div class="collapse navbar-collapse w-auto max-height-vh-100 h-100" id="sidenav-collapse-main">
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link <?= $request == '' || $request == 'setting-self' ? 'active' : '' ?>" href="<?= base_url() ?>">

@@ -23,8 +23,8 @@
     <link rel="icon" type="image/png" href="<?= base_url() ?>assets/img/favicon.png">
     <title>
         <?php
-            $app_name = service('setting')->getSetting('application_name');
-            echo $app_name;
+        $app_name = service('setting')->getSetting('application_name');
+        echo $app_name;
         ?>
     </title>
     <!--     Fonts and icons     -->
@@ -63,8 +63,22 @@
         <div class="px-4 mt-2">
             <?= view('Myth\Auth\Views\_message_block') ?>
         </div>
-
         <!-- End Navbar -->
+
+        <!-- <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button> -->
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <div class="me-2 rounded" id="toast-bg" style="height: 20px; width: 20px;"></div>
+                    <strong class="me-auto">TOAST HEADER</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    TOAST BODY
+                </div>
+            </div>
+        </div>
         <div class="container-fluid py-4">
             <?= $this->renderSection('content'); ?>
             <?= $this->include('layout/_footer.php'); ?>
@@ -102,6 +116,16 @@
                 Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
             }
         })
+
+        const toastTrigger = document.getElementById('liveToastBtn')
+        const toastLiveExample = document.getElementById('liveToast')
+
+        if (toastTrigger) {
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastTrigger.addEventListener('click', () => {
+                toastBootstrap.show()
+            })
+        }
     </script>
 
     <?= $this->renderSection('script'); ?>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" id="navbarBlur" navbar-scroll="false">
+<nav class="navbar z-0 navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" id="navbarBlur" navbar-scroll="false">
     <div class="container-fluid py-1 px-3">
         <!-- <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -17,12 +17,12 @@
                         <span class="d-sm-inline d-none"><?= user()->username ?></span>
                     </a>
                     <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropUserButton">
-                        <li class="">
+                        <li class="nav-item">
                             <a class="dropdown-item border-radius-md" href="<?= base_url('setting-self') ?>">
                                 Setting Akun
                             </a>
                         </li>
-                        <li class="">
+                        <li class="nav-item">
                             <a class="dropdown-item border-radius-md" href="<?= base_url('logout') ?>">
                                 Logout
                             </a>

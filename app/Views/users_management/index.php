@@ -14,7 +14,9 @@
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" width="5%">No</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Username</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No Rumah</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No HP</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jabatan</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Joined</th>
                                 <th class="text-secondary opacity-7">#</th>
@@ -63,6 +65,48 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editAccountModal" tabindex="-1" aria-labelledby="editAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/users-man/setting-account" method="post">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editAccountModalLabel">Edit Akun</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?= csrf_field() ?>
+                    <input type="hidden" id="user_id_account" name="user_id_account">
+
+                    <div class="mb-2">
+                        <label for="">Email <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="email" id="email" placeholder="E-mail">
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Username <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+                    </div>
+
+                    <div class="alert alert-warning py-2 mt-4 mb-1 text-white">
+                        Isi password jika ingin merubahnya
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Password min:6 karakter">
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Re-password</label>
+                        <input type="password" class="form-control" name="repassword" placeholder="Re-Password harus sama dengan password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <?= $this->endSection('content'); ?>
 
 <?= $this->section('script'); ?>
@@ -80,7 +124,15 @@
                 className: 'text-sm font-weight-bold'
             },
             {
+                data: 'no_rumah',
+                className: 'text-sm font-weight-bold'
+            },
+            {
                 data: 'fullname',
+                className: 'text-sm font-weight-bold'
+            },
+            {
+                data: 'no_hp',
                 className: 'text-sm font-weight-bold'
             },
             {
@@ -121,6 +173,18 @@
 
         $("#user_id").val(id_user);
         $("#fullname").val(fullname != "" ? fullname : username);
+    })
+
+    $(document).on('click', ".edit-account", function() {
+        $("#editAccountModal").modal('show');
+
+        var id_user = $(this).data('id');
+        var email = $(this).data('email');
+        var username = $(this).data('username');
+
+        $("#user_id_account").val(id_user);
+        $("#username").val(username);
+        $("#email").val(email);
     })
 </script>
 

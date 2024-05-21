@@ -13,7 +13,7 @@ class WargaModel extends Model
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'user_id', 'fullname', 'no_kk', 'no_ktp', 'place_of_birth', 'birth_of_day', 'gender', 'marital_status', 'religion', 'blood_group', 'work', 'address', 'created_by', 'updated_by', 'deleted_by'
+        'user_id', 'fullname', 'no_kk', 'no_ktp', 'place_of_birth', 'birth_of_day', 'gender', 'marital_status', 'religion', 'blood_group', 'work', 'address', 'created_by', 'updated_by', 'deleted_by', 'blok', 'phone'
     ];
 
     protected bool $allowEmptyInserts = false;
