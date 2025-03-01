@@ -29,7 +29,7 @@
 
 <div class="card mt-3">
     <div class="card-header mb-0 border-bottom">
-        <h4 class="m-0">Detail Iuran</h4>
+        <h4 class="m-0">Riwayat Pembayaran</h4>
     </div>
 
     <div class="card-body">
@@ -72,7 +72,7 @@
                 <tfoot>
                     <tr class="border">
                         <th colspan="3" class="text-center">Total</th>
-                        <th colspan="2">Rp. <?= number_format($total) ?></th>
+                        <th colspan="1">Rp. <?= number_format($total) ?></th>
                     </tr>
                 </tfoot>
             </table>
@@ -80,4 +80,40 @@
     </div>
 </div>
 
+<?php if ($iuranTypes['subTypes']) : ?>
+<div class="row mt-3">
+    <div class="col-md-6">
+        <div class="card border border-info">
+            <div class="card-body">
+                <?php $iuranType = $iuranTypes['iuranType']; ?>
+
+                <h5>Rincian <?= $iuranType->type ?></h5>
+                <table class="table table-bordered">
+                    <tr class="text-center">
+                        <th>No</th>
+                        <th>Sub Tipe Iuran</th>
+                        <th>Nominal</th>
+                    </tr>
+                    <?php
+                    $no = 1;
+                    $total = 0;
+                    foreach ($iuranTypes['subTypes'] as $type) :
+                        $total += $type->nominal;
+                    ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?></td>
+                            <td><?= $type->type ?></td>
+                            <td>Rp. <?= number_format($type->nominal) ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                    <tr>
+                        <th colspan="2" class="text-center">Total</th>
+                        <th>Rp. <?= number_format($total) ?></th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif ?>
 <?= $this->endSection('content'); ?>

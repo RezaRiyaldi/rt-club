@@ -132,17 +132,17 @@
                 },
                 class: 'btn btn-sm btn-danger btn-add'
             },
-            {
-                text: "<i class='fas fa-file-excel'></i>&nbsp; Export",
-                action: function() {
-                    // $("#modalPengeluaran").modal('show')
-                    // $("#modalPengeluaranLabel").text('Tambah Pengeluaran')
-                    // $("#modalPengeluaran form").attr('action', '/pengeluaran/add')
-                    // $("#modalPengeluaran form input[type='text'], #modalPengeluaran form textarea").val('')
-                    alert('Fitur belum tersedia!😁');
-                },
-                class: 'btn btn-sm btn-success btn-add'
-            }
+            // {
+            //     text: "<i class='fas fa-file-excel'></i>&nbsp; Export",
+            //     action: function() {
+            //         // $("#modalPengeluaran").modal('show')
+            //         // $("#modalPengeluaranLabel").text('Tambah Pengeluaran')
+            //         // $("#modalPengeluaran form").attr('action', '/pengeluaran/add')
+            //         // $("#modalPengeluaran form input[type='text'], #modalPengeluaran form textarea").val('')
+            //         alert('Fitur belum tersedia!😁');
+            //     },
+            //     class: 'btn btn-sm btn-success btn-add'
+            // }
         ]
     })
 

@@ -47,9 +47,13 @@ class IuranController extends BaseController
 
             $actions = [];
             if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara']) || $d['user_id'] == user()->id) {
-                $actions[] = '<a href="' . base_url('iuran/detail/' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail User"><i class="fas fa-eye"></i></a>';
+                $actions[] = '<a href="' . base_url('iuran/detail/' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail Iuran"><i class="fas fa-eye"></i></a>';
             }
-                
+
+            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) {
+                $actions[] = '<button data-id="' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id']) . '" data-name="' . $d['fullname'] . '" data-amount="Rp. ' . number_format($d['nominal'], 0, ',', '.') . '" class="btn btn-danger btn-sm px-2 py-1 me-1 mb-0 btn-delete" data-toggle="tooltip" title="Hapus Data Iuran"><i class="fas fa-trash"></i></button>';
+            }
+
             // $actions[] = '<a href="' . base_url('iuran/edit/' . base64_encode($d['id'])) . '" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>';
 
             $d['action'] = implode('', $actions);
@@ -87,7 +91,9 @@ class IuranController extends BaseController
     public function iuranType()
     {
         $iuranType = new Model();
-        $iuranType = $iuranType->db->table('iuran_type')->get()->getResult();
+        $iuranType = $iuranType->db->table('iuran_type')
+            ->where('parent_id', null)
+            ->get()->getResult();
 
         $data =  [
             'iuran_type' => $iuranType
@@ -106,10 +112,33 @@ class IuranController extends BaseController
             'description' => $dataForm['description']
         ];
 
-        $iuranType = new Model();
-        $iuranType = $iuranType->db->table('iuran_type')->insert($dataInsert);
+
+        $iuranTypeModel = new Model();
+        $iuranTypeModel->db->table('iuran_type')->insert($dataInsert);
+        $idParent = $iuranTypeModel->db->insertID();
+
+        $dataSubType = $dataForm['sub'];
+        if (count($dataSubType['type']) > 0) {
+            $this->insertSubType($dataSubType, $idParent);
+        }
+
 
         return redirect('iuran/type')->with('message', 'Berhasil menambah tipe iuran');
+    }
+
+    private function insertSubType($dataSubType, $idParent)
+    {
+        $iuranTypeModel = new Model();
+        foreach ($dataSubType['type'] as $key => $type) {
+            $dataSub = [
+                'type' => ucwords(strtolower($type)),
+                'nominal' => str_replace('.', '', $dataSubType['nominal'][$key]),
+                'description' => $dataSubType['description'][$key],
+                'parent_id' => $idParent
+            ];
+
+            $iuranTypeModel->db->table('iuran_type')->insert($dataSub);
+        }
     }
 
     public function getDetailTypeIuran()
@@ -117,10 +146,28 @@ class IuranController extends BaseController
         $_id = $this->request->getGet();
         $id = base64_decode($_id['id']);
 
-        $iuranType = new Model();
-        $iuranType = $iuranType->db->table('iuran_type')->where('id', $id)->get()->getRow();
+        $iuranTypeModel = new Model();
+        $iuranType = $iuranTypeModel->db->table('iuran_type')
+            ->where('id', $id)
+            ->get()->getRow();
 
-        echo json_encode($iuranType);
+        $subTypes = $iuranTypeModel->db->table('iuran_type')
+            ->where('parent_id', $id)
+            ->get()->getResult();
+
+        // Manipulation
+        $iuranType->nominal = number_format($iuranType->nominal, 0, ',', '.');
+        $subTypes = array_map(function ($subType) {
+            $subType->nominal = number_format($subType->nominal, 0, ',', '.');
+            return $subType;
+        }, $subTypes);
+
+        $response = [
+            'iuranType' => $iuranType,
+            'subTypes' => $subTypes
+        ];
+
+        echo json_encode($response);
     }
 
     public function processEditTypeIuran($id)
@@ -135,16 +182,37 @@ class IuranController extends BaseController
             'description' => $dataForm['description']
         ];
 
-        $iuranType = new Model();
-        $iuranType = $iuranType->db->table('iuran_type')->where('id', $id)->update($dataUpdate);
+        $iuranTypeModel = new Model();
+        $iuranTypeModel->db->table('iuran_type')->where('id', $id)->update($dataUpdate);
+
+        $dataSubType = $dataForm['sub'];
+        if (count($dataSubType['id']) > 0) {
+            $this->updateSubType($dataSubType);
+        }
 
         return redirect('iuran/type')->with('message', 'Berhasil merubah tipe iuran');
+    }
+
+    private function updateSubType($dataSubType)
+    {
+        $iuranTypeModel = new Model();
+        foreach ($dataSubType['id'] as $key => $id) {
+            $dataSub = [
+                'type' => ucwords(strtolower($dataSubType['type'][$key])),
+                'nominal' => str_replace('.', '', $dataSubType['nominal'][$key]),
+                'description' => $dataSubType['description'][$key]
+            ];
+
+            $iuranTypeModel->db->table('iuran_type')->where('id', $id)->update($dataSub);
+        }
     }
 
     public function addIuran()
     {
         $iuranType = new Model();
-        $iuranType = $iuranType->db->table('iuran_type')->get()->getResult();
+        $iuranType = $iuranType->db->table('iuran_type')
+            ->where('parent_id', null)
+            ->get()->getResult();
 
         $wargas = $this->wargaModel->select('wargas.id, wargas.fullname, users.username')
             ->join('users', 'users.id = wargas.user_id')
@@ -263,13 +331,46 @@ class IuranController extends BaseController
         if ($nominal >= $iurans[0]->nominal_type) {
             $status = 'Lunas';
         }
-        
+
+        $iuranTypeModel = new Model();
+        $iuranType = $iuranTypeModel->db->table('iuran_type')
+            ->where('id', $iurans[0]->type_id)
+            ->get()->getRow();
+
+        $subTypes = $iuranTypeModel->db->table('iuran_type')
+            ->where('parent_id', $iurans[0]->type_id)
+            ->get()->getResult();
+
+        // Manipulation
+        $iuranType->nominal = (int) number_format($iuranType->nominal, 0, ',', '');
+        $subTypes = array_map(function ($subType) {
+            $subType->nominal = (int) number_format($subType->nominal, 0, ',', '');
+            return $subType;
+        }, $subTypes);
+
+        $iuranTypes = [
+            'iuranType' => $iuranType,
+            'subTypes' => $subTypes
+        ];
+
         $data = [
             'warga' => $iurans[0],
             'iurans' => $iurans,
+            'iuranTypes' => $iuranTypes,
             'status' => $status
         ];
 
         return view('iuran/detail', $data);
+    }
+
+    public function processDeleteIuran($period, $warga_id) {
+        $bulan = substr($period, 0, 2);
+        $tahun = 20 . substr($period, 2);
+        $periode = "$tahun-$bulan";
+        $warga_id = base64_decode($warga_id);
+
+        $this->iuranModel->where('warga_id', $warga_id)->like('periode', $periode, 'after')->delete();
+
+        return redirect('iuran')->with('message', 'Berhasil menghapus iuran');
     }
 }

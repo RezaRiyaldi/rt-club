@@ -70,6 +70,8 @@ $routes->group('/iuran', function($routes) {
     $routes->get('edit/(:any)', 'IuranController::editIuran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
     $routes->post('edit/(:any)', 'IuranController::processEditIuran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
+    $routes->post('delete/(:any)/(:any)', 'IuranController::processDeleteIuran/$1/$2', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+
     $routes->get('detail/(:any)/(:any)', 'IuranController::detailIuran/$1/$2');
 
     $routes->get('type', 'IuranController::iuranType', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);

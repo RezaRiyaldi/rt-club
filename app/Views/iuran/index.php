@@ -40,6 +40,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="" method="post">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Hapus Data Iuran</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah anda yakin ingin menghapus data iuran <span id="userFullname" class="fw-bold"></span> dengan nominal <span id="iuranAmount" class="fw-bold"></span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary my-auto" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger my-auto">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection('content'); ?>
 
 <?= $this->section('script'); ?>
@@ -104,6 +124,20 @@
                 class: 'btn btn-sm btn-secondary btn-add-type'
             },
         ]
+    })
+
+    $(document).on('click', '.btn-delete', function() {
+        var id = $(this).data('id');
+        var url = '<?= base_url() ?>iuran/delete/' + id
+
+        var userFullname = $(this).data('name');
+        var iuranAmount = $(this).data('amount');
+
+        $("#deleteModal").modal('show')
+        $("#deleteModal form").attr('action', url);
+
+        $("#userFullname").text(userFullname)
+        $("#iuranAmount").text(iuranAmount)
     })
 </script>
 
