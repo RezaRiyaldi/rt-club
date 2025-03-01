@@ -39,7 +39,7 @@
                     <tr class="text-center">
                         <th>No</th>
                         <th>Tanggal Bayar</th>
-                        <th>Metode Pembayaran</th>
+                        <!-- <th>Metode Pembayaran</th> -->
                         <th class="text-start">Nominal</th>
                         <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) : ?>
                             <th>#</th>
@@ -58,7 +58,7 @@
                         <tr>
                             <td class="text-center"><?= $no++ ?></td>
                             <td class="text-center"><?= date('d F Y', strtotime($iuran->periode)) ?></td>
-                            <td class="text-center"><?= $iuran->payment_method ?? 'CASH' ?></td>
+                            <!-- <td class="text-center"><?= $iuran->payment_method ?? 'CASH' ?></td> -->
                             <td>Rp. <?= number_format($iuran->nominal) ?></td>
                             <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) : ?>
                                 <td class="text-center">

@@ -14,7 +14,7 @@
                         <div class="col-md-8 mx-auto d-block">
                             <div class="mb-3 text-center">
                                 <label for="" class="text-lg">No. Kartu Keluarga <span class="text-danger">*</span></label>
-                                <input type="text" name="no_kk" class="form-control" required placeholder="Nomor Kartu Keluarga" value="1234567890123456">
+                                <input type="text" name="no_kk" class="form-control" required placeholder="Nomor Kartu Keluarga">
                             </div>
                         </div>
 
@@ -29,14 +29,14 @@
                                             <div class="mb-2">
                                                 <input type="hidden" name="id[]">
                                                 <label for="">NIK <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="no_ktp[]" required placeholder="Nomor Induk Kependudukan" value="0123456789012345">
+                                                <input type="text" class="form-control" name="no_ktp[]" required placeholder="Nomor Induk Kependudukan">
                                             </div>
                                         </div>
 
                                         <div class="col-md-7">
                                             <div class="mb-2">
                                                 <label for="">Nama Lengkap <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="fullname[]" required placeholder="Nama Lengkap Kepala Keluarga" value="Kepala Suku 1">
+                                                <input type="text" class="form-control" name="fullname[]" required placeholder="Nama Lengkap Kepala Keluarga">
                                             </div>
                                         </div>
                                     </div>
@@ -45,14 +45,14 @@
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">Tempat Lahir <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="place_of_birth[]" required placeholder="Tempat Lahir" value="Bandung">
+                                                <input type="text" class="form-control" name="place_of_birth[]" required placeholder="Tempat Lahir">
                                             </div>
                                         </div>
 
                                         <div class="col-6">
                                             <div class="mb-2">
                                                 <label for="">Tanggal Lahir <span class="text-danger">*</span></label>
-                                                <input type="date" class="form-control" name="birth_of_day[]" required placeholder="Tanggal Lahir" value="1999-12-03">
+                                                <input type="date" class="form-control" name="birth_of_day[]" required placeholder="Tanggal Lahir">
                                             </div>
                                         </div>
                                     </div>
@@ -61,7 +61,6 @@
                                         <div class="col-md-6">
                                             <div class="mb-2">
                                                 <label for="">Jenis Kelamin <span class="text-danger">*</span></label>
-
                                                 <div>
                                                     <div class="form-check form-check-inline">
                                                         <input required class="form-check-input" type="radio" name="gender[]" id="male" value="Laki - laki">
@@ -133,10 +132,12 @@
                                     <div class="mb-2">
                                         <label for="">No Hp</label>
                                         <input type="text" name="phone[]" class="form-control" placeholder="Nomor telepon">
+                                        <small class="text-danger" id="phoneError" style="display: none;">Format nomor HP tidak valid!</small>
                                     </div>
                                     <div class="mb-2">
                                         <label for="">Email</label>
                                         <input type="email" name="email[]" class="form-control" placeholder="E-mail">
+                                        <small class="text-danger emailError" style="display: none;">Format email tidak valid!</small>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
@@ -392,8 +393,33 @@
             var removeButton = `<button class="btn btn-danger mb-1" id="removeMember" data-target_id="${index - 1}" type="button"><i class="fas fa-times"></i> Anggota Terakhir</button>`
             $('#containerButtonForm').prepend(removeButton);
         }
+    });
 
-    })
+    $(document).on("input blur", "input[name='phone[]']", function() {
+        let phone = $(this).val().trim();
+        let regex = /^(?:\+62|62|0)8[1-9][0-9]{7,11}$/; // Regex untuk nomor HP Indonesia
+        if (phone === "" || regex.test(phone)) {
+            $("#phoneError").hide();
+            $(this).removeClass("is-invalid").addClass("is-valid");
+        } else {
+            $("#phoneError").show();
+            $(this).removeClass("is-valid").addClass("is-invalid");
+        }
+    });
+
+    $(document).on("input blur", "input[name='email[]']", function() {
+        let email = $(this).val().trim();
+        let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Regex validasi email
+        let errorElement = $(this).next(".emailError"); // Cari error setelah input ini
+
+        if (email === "" || regex.test(email)) {
+            errorElement.hide();
+            $(this).removeClass("is-invalid").addClass("is-valid");
+        } else {
+            errorElement.show();
+            $(this).removeClass("is-valid").addClass("is-invalid");
+        }
+    });
 
     var addFamily = function(index, dataMember) {
         var html;
@@ -522,9 +548,11 @@
                     <div class="mb-2">
                         <label for="">No Hp</label>
                         <input type="text" name="phone[]" class="form-control" placeholder="Nomor telepon">
+                        <small class="text-danger" id="phoneError" style="display: none;">Format nomor HP tidak valid!</small>
                     </div>
                     <div class="">
                         <input type="hidden" name="email[]" class="form-control" placeholder="E-mail">
+                        <small class="text-danger emailError" style="display: none;">Format email tidak valid!</small>
                     </div>
                 </div>
             </div>

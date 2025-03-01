@@ -57,7 +57,7 @@ class IuranController extends BaseController
 
             $bg = "danger";
             $text = "Belum Lunas";
-            if ($d['nominal'] >= str_replace('.', '', service('setting')->getSetting('nominal_kas'))) {
+            if ($d['nominal'] >= $d['nominal_type']) {
                 $text = "Lunas";
                 $bg = "success";
             }
@@ -102,6 +102,7 @@ class IuranController extends BaseController
 
         $dataInsert = [
             'type' => ucwords(strtolower($dataForm['type'])),
+            'nominal' => str_replace('.', '', $dataForm['nominal']),
             'description' => $dataForm['description']
         ];
 
@@ -130,6 +131,7 @@ class IuranController extends BaseController
 
         $dataUpdate = [
             'type' => ucwords(strtolower($dataForm['type'])),
+            'nominal' => str_replace('.', '', $dataForm['nominal']),
             'description' => $dataForm['description']
         ];
 
@@ -244,7 +246,7 @@ class IuranController extends BaseController
         $periode = "$tahun-$bulan";
         $warga_id = base64_decode($warga_id);
 
-        $iurans = $this->iuranModel->select('iurans.*, wargas.fullname, wargas.address, iuran_type.type')
+        $iurans = $this->iuranModel->select('iurans.*, wargas.fullname, wargas.address, iuran_type.type, iuran_type.nominal as nominal_type')
             ->join('iuran_type', 'iuran_type.id = iurans.type_id', 'inner')
             ->join('wargas', 'wargas.id = iurans.warga_id', 'inner')
             ->where('warga_id', $warga_id)
@@ -258,7 +260,7 @@ class IuranController extends BaseController
         }
 
         $status = 'Belum Lunas';
-        if ($nominal >= str_replace('.', '', service('setting')->getSetting('nominal_kas'))){
+        if ($nominal >= $iurans[0]->nominal_type) {
             $status = 'Lunas';
         }
         

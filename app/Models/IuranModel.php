@@ -44,7 +44,7 @@ class IuranModel extends Model
 
     public function getIurans($params = []) {
         $builder = $this->table($this->table);
-        $builder = $builder->select('iurans.*, it.type, w.fullname, u.id as user_id');
+        $builder = $builder->select('iurans.*, it.type, it.nominal as nominal_type, w.fullname, u.id as user_id');
         $builder = $builder->select("MONTH(periode) as bulan, YEAR(periode) as tahun");
         $builder = $builder->selectSum('iurans.nominal');
 
@@ -75,7 +75,7 @@ class IuranModel extends Model
                 }
             }
         } else {
-            $builder = $builder->orderBy('periode', 'asc');
+            $builder = $builder->orderBy('periode', 'desc');
         }
 
         return $builder->get()->getResult();

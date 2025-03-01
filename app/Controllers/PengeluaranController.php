@@ -142,4 +142,21 @@ class PengeluaranController extends BaseController
 
         return redirect('pengeluaran')->with('message', 'Berhasil menghapus pengeluaran');
     }
+
+    public function detailPengeluaran($_id)
+    {
+        $id = base64_decode($_id);
+
+        $detailPengeluaran = $this->pengeluaranModel->select('pengeluarans.*, wargas.*')
+            ->join('users', 'users.id = pengeluarans.created_by', 'left')
+            ->join('wargas', 'wargas.user_id = users.id', 'left')
+            ->where('pengeluarans.id', $id)
+            ->get()->getRow();
+        
+        $data = [
+            'pengeluaran' => $detailPengeluaran
+        ];
+
+        return view('pengeluaran/detail', $data);
+    }
 }

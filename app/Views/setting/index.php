@@ -54,11 +54,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="mb-2">
-                    <label for="">Nominal Kas / Bulan</label>
-                    <input type="text" class="form-control number-input" name="nominal_kas" value="<?= $settings['nominal_kas'] ?? '' ?>" placeholder="Contoh: Rp. 100.000">
-                </div>
             </div>
         </div>
 
@@ -68,28 +63,3 @@
     </form>
 </div>
 <?= $this->endSection('content'); ?>
-
-<?= $this->section('script'); ?>
-<script>
-    $(document).ready(function() {
-        $('.number-input').keyup(function() {
-            // Mendapatkan nilai input
-            let input = $(this).val();
-
-            // Menghapus karakter selain angka
-            let formattedInput = input.replace(/\D/g, '');
-
-            // Menangani kasus di mana angka 0 di depan dihilangkan ketika angka lain dimasukkan
-            if (formattedInput.length > 1 && formattedInput.charAt(0) === '0') {
-                formattedInput = formattedInput.slice(1);
-            }
-
-            // Menambahkan titik sebagai pemisah ribuan
-            formattedInput = formattedInput.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-            // Menetapkan nilai input yang diformat kembali ke input
-            $(this).val(formattedInput);
-        });
-    });
-</script>
-<?= $this->endSection('script'); ?>

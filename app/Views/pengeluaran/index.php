@@ -123,15 +123,27 @@
         },
         buttons: ['reload'],
         customButtons: [{
-            text: "<i class='fas fa-plus'></i> Pengeluaran",
-            action: function() {
-                $("#modalPengeluaran").modal('show')
-                $("#modalPengeluaranLabel").text('Tambah Pengeluaran')
-                $("#modalPengeluaran form").attr('action', '/pengeluaran/add')
-                $("#modalPengeluaran form input[type='text'], #modalPengeluaran form textarea").val('')
+                text: "<i class='fas fa-plus'></i>&nbsp; Pengeluaran",
+                action: function() {
+                    $("#modalPengeluaran").modal('show')
+                    $("#modalPengeluaranLabel").text('Tambah Pengeluaran')
+                    $("#modalPengeluaran form").attr('action', '/pengeluaran/add')
+                    $("#modalPengeluaran form input[type='text'], #modalPengeluaran form textarea").val('')
+                },
+                class: 'btn btn-sm btn-danger btn-add'
             },
-            class: 'btn btn-sm btn-danger btn-add'
-        }]
+            {
+                text: "<i class='fas fa-file-excel'></i>&nbsp; Export",
+                action: function() {
+                    // $("#modalPengeluaran").modal('show')
+                    // $("#modalPengeluaranLabel").text('Tambah Pengeluaran')
+                    // $("#modalPengeluaran form").attr('action', '/pengeluaran/add')
+                    // $("#modalPengeluaran form input[type='text'], #modalPengeluaran form textarea").val('')
+                    alert('Fitur belum tersedia!😁');
+                },
+                class: 'btn btn-sm btn-success btn-add'
+            }
+        ]
     })
 
     $('.number-input').keyup(function() {
@@ -169,7 +181,7 @@
     $(document).on('click', '.btn-delete', function() {
         var id = $(this).data('id');
         var url = '<?= base_url() ?>pengeluaran/delete/' + id
-        
+
         var pengeluaranName = $(this).data('name');
         var pengeluaranAmount = $(this).data('amount');
 

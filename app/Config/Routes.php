@@ -8,13 +8,13 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('/dashboard-keuangan', 'Home::getKeuangan');
 
-$routes->get('/setting-self', 'settingController::settingSelf');
-$routes->post('/setting-self', 'settingController::processSettingSelf');
+$routes->get('/setting-self', 'SettingController::settingSelf');
+$routes->post('/setting-self', 'SettingController::processSettingSelf');
 
 // SETTINGS MANAGEMENT
 $routes->group('/settings-man', ['filter' => 'role:Superadmin'], function ($routes) {
-    $routes->get('', 'settingController::index');
-    $routes->post('', 'settingController::setSettings');
+    $routes->get('', 'SettingController::index');
+    $routes->post('', 'SettingController::setSettings');
     // $routes->post('get_list', 'UsersController::getListUsers');
 
     // $routes->get('add', 'UsersController::addUser');
@@ -40,7 +40,7 @@ $routes->group('/users-man', function ($routes) {
     $routes->post('edit', 'UsersController::processEditUser', ['filter' => 'role:Superadmin, Ketua RT']);
 
     $routes->post('check_data_user', 'UsersController::checkDuplicate');
-    $routes->post('setting-account', 'settingController::processSettingSelf');
+    $routes->post('setting-account', 'SettingController::processSettingSelf');
 });
 
 // GROUPS MANAGEMENT
@@ -64,19 +64,19 @@ $routes->group('/iuran', function($routes) {
     $routes->get('', 'IuranController::index');
     $routes->post('get_list', 'IuranController::getListIurans');
 
-    $routes->get('add', 'IuranController::addIuran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('add', 'IuranController::processAddIuran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('add', 'IuranController::addIuran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('add', 'IuranController::processAddIuran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
-    $routes->get('edit/(:any)', 'IuranController::editIuran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('edit/(:any)', 'IuranController::processEditIuran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('edit/(:any)', 'IuranController::editIuran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('edit/(:any)', 'IuranController::processEditIuran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
     $routes->get('detail/(:any)/(:any)', 'IuranController::detailIuran/$1/$2');
 
-    $routes->get('type', 'IuranController::iuranType', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('type/add', 'IuranController::processAddTypeIuran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('type', 'IuranController::iuranType', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('type/add', 'IuranController::processAddTypeIuran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
-    $routes->get('type/get-detail', 'IuranController::getDetailTypeIuran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('type/edit/(:any)', 'IuranController::processEditTypeIuran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('type/get-detail', 'IuranController::getDetailTypeIuran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('type/edit/(:any)', 'IuranController::processEditTypeIuran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 });
 
 $routes->group('/pengeluaran', function($routes) {
@@ -84,20 +84,20 @@ $routes->group('/pengeluaran', function($routes) {
     $routes->post('get_list', 'PengeluaranController::getListPengeluaran');
 
     // $routes->get('add', 'PengeluaranController::addIuran');
-    $routes->post('add', 'PengeluaranController::processAddPengeluaran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->post('add', 'PengeluaranController::processAddPengeluaran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
-    $routes->get('edit/(:any)', 'PengeluaranController::getPengeluaran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('edit/(:any)', 'PengeluaranController::processEditPengeluaran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('edit/(:any)', 'PengeluaranController::getPengeluaran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('edit/(:any)', 'PengeluaranController::processEditPengeluaran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
     
-    $routes->post('delete/(:any)', 'PengeluaranController::processDeletePengeluaran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->post('delete/(:any)', 'PengeluaranController::processDeletePengeluaran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
-    $routes->get('detail/(:any)/(:any)', 'PengeluaranController::detailIuran/$1/$2');
+    $routes->get('detail/(:any)', 'PengeluaranController::detailPengeluaran/$1');
 
-    $routes->get('type', 'PengeluaranController::iuranType', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('type/add', 'PengeluaranController::processAddTypeIuran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('type', 'PengeluaranController::iuranType', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('type/add', 'PengeluaranController::processAddTypeIuran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 
-    $routes->get('type/get-detail', 'PengeluaranController::getDetailTypeIuran', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
-    $routes->post('type/edit/(:any)', 'PengeluaranController::processEditTypeIuran/$1', ['filter' => 'role:Superadmin, Ketua RT', 'Bendahara']);
+    $routes->get('type/get-detail', 'PengeluaranController::getDetailTypeIuran', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
+    $routes->post('type/edit/(:any)', 'PengeluaranController::processEditTypeIuran/$1', ['filter' => 'role:Superadmin, Ketua RT, Bendahara']);
 });
 
 // GET REGIONS

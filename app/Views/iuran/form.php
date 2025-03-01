@@ -2,7 +2,7 @@
 
 <?= $this->section('content'); ?>
 <div class="row">
-    <div class="col-6">
+    <div class="col-md-6">
         <div class="card">
             <form action="" method="post">
                 <?= @csrf_field() ?>

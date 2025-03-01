@@ -20,6 +20,10 @@ class UserModel2 extends UserModel
         $builder = $builder->join('auth_groups_users agus', 'agus.user_id = users.id', 'left');
         $builder = $builder->join('auth_groups ag', 'ag.id = agus.group_id', 'left');
 
+        if (!in_groups('superadmin')) {
+            $builder = $builder->whereNotIn('agus.group_id', [1]);
+        }
+
         if (!empty($params['search'])) {
             if (!empty($params['columns'])) {
                 foreach ($params['columns'] as $column) {
