@@ -442,7 +442,7 @@
                         <div class="col-md-7">
                             <div class="mb-2">
                                 <label for="">Nama Lengkap <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="fullname[]" required placeholder="Nama Lengkap Kepala Keluarga">
+                                <input type="text" class="form-control" name="fullname[]" required placeholder="Nama Lengkap Anggota Keluarga">
                             </div>
                         </div>
                     </div>
@@ -503,12 +503,12 @@
                                 <label for="">Agama <span class="text-danger">*</span></label>
                                 <select name="religion[]" id="religion" class="form-select" required>
                                     <option value="">-- Pilih Agama</option>
-                                    <option value="Islam">Islam</option>
-                                    <option value="Protestan">Protestan</option>
-                                    <option value="Katholik">Katholik</option>
-                                    <option value="Buddha">Buddha</option>
-                                    <option value="Hindu">Hindu</option>
-                                    <option value="Khonghucu">Khonghucu</option>
+                                    <option ${dataMember && dataMember.religion == 'Islam' ? 'selected' : '' } value="Islam">Islam</option>
+                                    <option ${dataMember && dataMember.religion == 'Protestan' ? 'selected' : '' } value="Protestan">Protestan</option>
+                                    <option ${dataMember && dataMember.religion == 'Katholik' ? 'selected' : '' } value="Katholik">Katholik</option>
+                                    <option ${dataMember && dataMember.religion == 'Buddha' ? 'selected' : '' } value="Buddha">Buddha</option>
+                                    <option ${dataMember && dataMember.religion == 'Hindu' ? 'selected' : '' } value="Hindu">Hindu</option>
+                                    <option ${dataMember && dataMember.religion == 'Khonghucu' ? 'selected' : '' } value="Khonghucu">Khonghucu</option>
                                 </select>
                             </div>
                         </div>
@@ -518,10 +518,10 @@
                                 <label for="">Golongan Darah</label>
                                 <select name="blood_group[]" id="blood_group" class="form-select">
                                     <option value="-">-</option>
-                                    <option value="A">A</option>
-                                    <option value="B">B</option>
-                                    <option value="AB">AB</option>
-                                    <option value="O">O</option>
+                                    <option ${dataMember && dataMember.blood_group == 'A' ? 'selected' : '' } value="A">A</option>
+                                    <option ${dataMember && dataMember.blood_group == 'B' ? 'selected' : '' } value="B">B</option>
+                                    <option ${dataMember && dataMember.blood_group == 'AB' ? 'selected' : '' } value="AB">AB</option>
+                                    <option ${dataMember && dataMember.blood_group == 'O' ? 'selected' : '' } value="O">O</option>
                                 </select>
                             </div>
                         </div>
@@ -540,9 +540,9 @@
                         <label for="">Hubungan <span class="text-danger">*</span></label>
                         <select name="status_family[]" id="status_family" class="form-select" required>
                             <option value="">-- Hubungan dengan kepala keluarga</option>
-                            <option value="Istri">Istri</option>
-                            <option value="Anak">Anak</option>
-                            <option value="Lainnya">Lainnya</option>
+                            <option ${dataMember && dataMember.status_family == 'Istri' ? 'selected' : '' } value="Istri">Istri</option>
+                            <option ${dataMember && dataMember.status_family == 'Anak' ? 'selected' : '' } value="Anak">Anak</option>
+                            <option ${dataMember && dataMember.status_family == 'Lainnya' ? 'selected' : '' } value="Lainnya">Lainnya</option>
                         </select>
                     </div>
                     <div class="mb-2">

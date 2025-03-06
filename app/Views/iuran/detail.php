@@ -41,7 +41,7 @@
                         <th>Tanggal Bayar</th>
                         <!-- <th>Metode Pembayaran</th> -->
                         <th class="text-start">Nominal</th>
-                        <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) : ?>
+                        <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) : ?>
                             <th>#</th>
                         <?php endif ?>
                     </tr>
@@ -60,7 +60,7 @@
                             <td class="text-center"><?= date('d F Y', strtotime($iuran->periode)) ?></td>
                             <!-- <td class="text-center"><?= $iuran->payment_method ?? 'CASH' ?></td> -->
                             <td>Rp. <?= number_format($iuran->nominal) ?></td>
-                            <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) : ?>
+                            <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) : ?>
                                 <td class="text-center">
                                     <a href="<?= base_url('iuran/edit/' . base64_encode($iuran->id)) ?>" class="btn btn-warning btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Edit User"><i class="fas fa-pen"></i></a>
                                 </td>

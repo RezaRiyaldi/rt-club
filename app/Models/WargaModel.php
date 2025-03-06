@@ -10,10 +10,10 @@ class WargaModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
-    protected $useSoftDeletes   = true;
+    protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'user_id', 'fullname', 'no_kk', 'no_ktp', 'place_of_birth', 'birth_of_day', 'gender', 'marital_status', 'religion', 'blood_group', 'work', 'address', 'created_by', 'updated_by', 'deleted_by', 'blok', 'phone'
+        'user_id', 'fullname', 'no_kk', 'no_ktp', 'place_of_birth', 'birth_of_day', 'gender', 'status_family', 'marital_status', 'religion', 'blood_group', 'work', 'address', 'created_by', 'updated_by', 'deleted_by', 'blok', 'phone'
     ];
 
     protected bool $allowEmptyInserts = false;

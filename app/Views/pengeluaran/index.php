@@ -193,7 +193,7 @@
     })
 </script>
 
-<?php if (!in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) : ?>
+<?php if (!in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) : ?>
     <script>
         $(".btn-add").remove();
     </script>

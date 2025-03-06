@@ -46,11 +46,11 @@ class IuranController extends BaseController
             $d['no'] = $no++;
 
             $actions = [];
-            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara']) || $d['user_id'] == user()->id) {
+            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris']) || $d['user_id'] == user()->id) {
                 $actions[] = '<a href="' . base_url('iuran/detail/' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail Iuran"><i class="fas fa-eye"></i></a>';
             }
 
-            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) {
+            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) {
                 $actions[] = '<button data-id="' . date('my', strtotime($d['periode'])) . '/' . base64_encode($d['warga_id']) . '" data-name="' . $d['fullname'] . '" data-amount="Rp. ' . number_format($d['nominal'], 0, ',', '.') . '" class="btn btn-danger btn-sm px-2 py-1 me-1 mb-0 btn-delete" data-toggle="tooltip" title="Hapus Data Iuran"><i class="fas fa-trash"></i></button>';
             }
 
@@ -186,25 +186,47 @@ class IuranController extends BaseController
         $iuranTypeModel->db->table('iuran_type')->where('id', $id)->update($dataUpdate);
 
         $dataSubType = $dataForm['sub'];
-        if (count($dataSubType['id']) > 0) {
-            $this->updateSubType($dataSubType);
+
+        $getDataSubType = $iuranTypeModel->db->table('iuran_type')
+            ->where('parent_id', $id)
+            ->get()->getResultArray();
+
+        $existingSubTypes = [];
+        foreach ($getDataSubType as $subType) {
+            $existingSubTypes[$subType['id']] = $subType;
+        }
+
+        // Process submitted subtypes
+        foreach ($dataSubType['type'] as $index => $type) {
+            $subTypeId = $dataSubType['id'][$index] ?? null;
+            $subTypeData = [
+                'type' => ucwords(strtolower($type)),
+                'nominal' => str_replace('.', '', $dataSubType['nominal'][$index]),
+                'description' => $dataSubType['description'][$index],
+                'parent_id' => $id
+            ];
+
+            if ($subTypeId && isset($existingSubTypes[$subTypeId])) {
+                // Update existing subtype
+                $iuranTypeModel->db->table('iuran_type')
+                    ->where('id', $subTypeId)
+                    ->update($subTypeData);
+                // Remove from existing subtypes array to mark it as processed
+                unset($existingSubTypes[$subTypeId]);
+            } else {
+                // Insert new subtype
+                $iuranTypeModel->db->table('iuran_type')->insert($subTypeData);
+            }
+        }
+
+        // Delete subtypes that were not submitted
+        foreach ($existingSubTypes as $subTypeId => $subType) {
+            $iuranTypeModel->db->table('iuran_type')
+                ->where('id', $subTypeId)
+                ->delete();
         }
 
         return redirect('iuran/type')->with('message', 'Berhasil merubah tipe iuran');
-    }
-
-    private function updateSubType($dataSubType)
-    {
-        $iuranTypeModel = new Model();
-        foreach ($dataSubType['id'] as $key => $id) {
-            $dataSub = [
-                'type' => ucwords(strtolower($dataSubType['type'][$key])),
-                'nominal' => str_replace('.', '', $dataSubType['nominal'][$key]),
-                'description' => $dataSubType['description'][$key]
-            ];
-
-            $iuranTypeModel->db->table('iuran_type')->where('id', $id)->update($dataSub);
-        }
     }
 
     public function addIuran()
@@ -363,7 +385,8 @@ class IuranController extends BaseController
         return view('iuran/detail', $data);
     }
 
-    public function processDeleteIuran($period, $warga_id) {
+    public function processDeleteIuran($period, $warga_id)
+    {
         $bulan = substr($period, 0, 2);
         $tahun = 20 . substr($period, 2);
         $periode = "$tahun-$bulan";

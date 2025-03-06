@@ -80,7 +80,7 @@ class SettingController extends BaseController
             $dataUpdate['password'] = $post['password'];
             $dataUpdate['repassword'] = $post['repassword'];
 
-            $rules['password'] = 'required|min_length[6]';
+            $rules['password'] = 'required|min_length[2]';
             $rules['repassword'] = 'matches[password]';
         }
 

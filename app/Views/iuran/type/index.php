@@ -102,6 +102,7 @@
         $("#iuranTypeModalLabel").text('Edit Tipe Iuran')
         $("#btnSubmit").addClass('btn-warning')
         $("#btnSubmit").removeClass('btn-success')
+        $("#inputNominal").attr('readonly', false);
 
         $.ajax({
             url: '<?= base_url() ?>iuran/type/get-detail/',
@@ -176,16 +177,25 @@
         if ($("#subType").children().length == 0) {
             $("#inputNominal").attr('readonly', false);
         }
+        let nominal = 0
+
+        $("[name='sub[nominal][]']").each(function() {
+            nominal += parseInt($(this).val().replace(/\./g, ''));
+        });
+
+        const formatedNumber = numberFormat(nominal.toString());
+
+        $("#inputNominal").val(formatedNumber);
     });
 
     $(document).on('keyup', "[name='sub[nominal][]']", function() {
         var nominal = 0;
         $("[name='sub[nominal][]']").each(function() {
-            nominal += parseInt($(this).val().replace(/\./g, ''));            
+            nominal += parseInt($(this).val().replace(/\./g, ''));
         });
 
         const formatedNumber = numberFormat(nominal.toString());
-        
+
         $("#inputNominal").val(formatedNumber);
     });
 </script>

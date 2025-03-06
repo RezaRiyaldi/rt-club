@@ -74,7 +74,7 @@ class GroupController extends BaseController
     {
         $data = [
             'title' => 'Tambah Grup',
-            'url' => '/groups-man/edit',
+            'url' => '/groups-man/add',
         ];
 
         return view('users_management/groups/form', $data);

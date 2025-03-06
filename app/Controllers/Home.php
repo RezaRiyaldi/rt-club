@@ -18,13 +18,37 @@ class Home extends BaseController
         $pengeluaran = $pengeluaranModel->selectSum('nominal')->get()->getRow();
 
         $wargaModel = new WargaModel();
-        $totalWarga = $wargaModel->selectCount('id')->get()->getRow()->id;
-        $totalKepalaKeluarga = $wargaModel->selectCount('id')->where('status_family', 'Kepala Keluarga')->get()->getRow()->id;
-        $anak = $wargaModel->where('status_family', 'Anak')->get()->getResult();
+
+        // TOTAL WARGA
+        $totalWarga = $wargaModel->selectCount('id');
+        if (in_groups('warga')) {
+            $totalWarga = $totalWarga->where('user_id', user()->id);
+        }
+        $totalWarga = $totalWarga->get()->getRow()->id;
+
+        // TOTAL KEPALA KELUARGA
+        $totalKepalaKeluarga = $wargaModel->selectCount('id');
+        if (in_groups('warga')) {
+            $totalKepalaKeluarga = $totalKepalaKeluarga->where('user_id', user()->id);
+        }
+        $totalKepalaKeluarga = $totalKepalaKeluarga->where('status_family', 'Kepala Keluarga')->get()->getRow()->id;
+
+        // TOTAL ANAK
+        $anak = $wargaModel->where('status_family', 'Anak');
+        if (in_groups('warga')) {
+            $noKK = $wargaModel->select('no_kk')->where('user_id', user()->id)->get()->getRow()->no_kk;
+            $anak = $anak->where('no_kk', $noKK);
+        }
+        $anak = $anak->get()->getResult();
+
+        // TOTAL WARGA BELUM MENIKAH
         $totalWargaBelumMenikah = $wargaModel->selectCount('id')
-            ->where('marital_status', 'Belum Menikah')
-            ->where('TIMESTAMPDIFF(YEAR, birth_of_day, CURDATE()) >=', 17)
-            ->get()->getRow()->id;
+            ->where('marital_status', 'Belum Menikah');
+        if (in_groups('warga')) {
+            $noKK = $wargaModel->select('no_kk')->where('user_id', user()->id)->get()->getRow()->no_kk;
+            $totalWargaBelumMenikah = $totalWargaBelumMenikah->where('no_kk', $noKK);
+        }
+        $totalWargaBelumMenikah = $totalWargaBelumMenikah->get()->getRow()->id;
 
         $totalAnak = count($anak);
         $totalAnakDibawah17 = 0;

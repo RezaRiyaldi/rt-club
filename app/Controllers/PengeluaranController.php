@@ -48,7 +48,7 @@ class PengeluaranController extends BaseController
             $action = [];
             $action[] = '<a href="/pengeluaran/detail/' . base64_encode($d['id']) . '" class="btn btn-sm btn-secondary px-2 py-1 mb-0"><i class="fas fa-eye"></i></a>';
             
-            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara'])) {
+            if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) {
                 $action[] = '<button data-id="' . base64_encode($d['id']) . '" class="btn btn-sm btn-warning px-2 py-1 btn-edit mb-0"><i class="fas fa-pen"></i></button>';
                 $action[] = '<button data-id="' . base64_encode($d['id']) . '" class="btn btn-sm btn-danger px-2 py-1 btn-delete mb-0" data-name="' . $d['pengeluaran'] . '" data-amount="' . $d['nominal'] . '"><i class="fas fa-trash"></i></button>';
             }

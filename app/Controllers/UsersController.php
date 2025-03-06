@@ -62,7 +62,7 @@ class UsersController extends BaseController
 
             $actions = [];
 
-            if (isset($d['no_kk']) && ($d['id_user'] == user()->id || in_groups(['Superadmin', 'Ketua RT', 'Bendahara']))) {
+            if (isset($d['no_kk']) && ($d['id_user'] == user()->id || in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris']))) {
                 $actions[] = '<a href="' . base_url('users-man/detail/' . base64_encode($d['no_kk'])) . '" class="btn btn-secondary btn-sm px-2 py-1 me-1 mb-0" data-toggle="tooltip" title="Detail User"><i class="fas fa-eye"></i></a>';
             }
 
@@ -292,14 +292,9 @@ class UsersController extends BaseController
         $keys = array_keys($dataForm);
 
         $data = [];
-        for ($i = 0; $i < count($dataForm['no_ktp']); $i++) {
+        foreach ($dataForm['no_ktp'] as $i => $no_ktp) {
             foreach ($keys as $key) {
-                $field = $dataForm[$key];
-                if (is_array($field)) {
-                    $data[$i][$key] = $field[$i] ?? NULL;
-                } else {
-                    $data[$i][$key] = $field;
-                }
+                $data[$i][$key] = is_array($dataForm[$key]) ? $dataForm[$key][$i] ?? NULL : $dataForm[$key];
             }
         }
 
@@ -308,47 +303,63 @@ class UsersController extends BaseController
 
         try {
             $rt = $rw = $blok = NULL;
+
+            $existingIds = array_column($this->wargaModel->select('id')->where('no_kk', $dataForm['no_kk'])->findAll(), 'id');
+            $newIds = [];
             foreach ($data as $d) {
+                if (isset($d['id']) && !empty($d['id'])) {
+                    $newIds[] = $d['id'];
+                    if ($d['status_family'] == "Kepala Keluarga") {
+                        $rt = $d['rt'];
+                        $rw = $d['rw'];
+                        $blok = $d['blok'] . $d['blok_number'] . " No " . $d['home_number'];
+                        $d['blok'] = $blok;
 
-                if ($d['status_family'] == "Kepala Keluarga") {
-                    $rt = $d['rt'];
-                    $rw = $d['rw'];
-                    $blok = $d['blok'] . $d['blok_number'] . " No " . $d['home_number'];
-                    $d['blok'] = $blok;
+                        $user_id = $this->wargaModel->select('user_id')->find($d['id'])->user_id;
+                        $this->userModel->update($user_id, ['email' => $d['email']]);
+                    } else {
+                        $d['blok'] = $blok;
+                    }
 
-                    // EDIT EMAIL
-                    $user_id = $this->wargaModel->select('user_id')->find($d['id'])->user_id;
-                    $this->userModel->update($user_id, ['email' => $d['email']]);
+                    $d['address'] = json_encode([
+                        'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $blok,
+                        'provinsi' => 'JAWA BARAT',
+                        'kota' => 'KABUPATEN BEKASI',
+                        'kecamatan' => 'CIBITUNG',
+                        'kelurahan' => 'KERTAMUKTI',
+                        'kode_pos' => 17520,
+                        'rt' => str_pad($rt, 3, "0", STR_PAD_LEFT),
+                        'rw' => str_pad($rw, 3, "0", STR_PAD_LEFT),
+                    ]);
+
+                    $d['updated_by'] = user()->id;
+
+                    unset($d['csrf_test_name'], $d['rt'], $d['rw'], $d['blok_number'], $d['home_number']);
+                    $this->wargaModel->update( $d['id'], $d);
+
                 } else {
-                    $d['blok'] = $blok;
+                    unset($d['id']);
+                    $d['created_by'] = $d['updated_by'] = user()->id;
+
+                    $d['address'] = json_encode([
+                        'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $d['blok'],
+                        'provinsi' => 'JAWA BARAT',
+                        'kota' => 'KABUPATEN BEKASI',
+                        'kecamatan' => 'CIBITUNG',
+                        'kelurahan' => 'KERTAMUKTI',
+                        'kode_pos' => 17520,
+                        'rt' => str_pad($d['rt'], 3, "0", STR_PAD_LEFT),
+                        'rw' => str_pad($d['rw'], 3, "0", STR_PAD_LEFT),
+                    ]);
+
+                    unset($d['csrf_test_name'], $d['rt'], $d['rw'], $d['blok_number'], $d['home_number']);
+                    $newIds[] = $this->wargaModel->insert($d);
                 }
+            }
 
-                $d['address'] = json_encode([
-                    'alamat' => $setting->getSetting('perum_name') . ' Blok ' . $blok,
-                    'provinsi' => 'JAWA BARAT',
-                    'kota' => 'KABUPATEN BEKASI',
-                    'kecamatan' => 'CIBITUNG',
-                    'kelurahan' => 'KERTAMUKTI',
-                    'kode_pos' => 17520,
-                    'rt' => str_pad($rt, 3, "0", STR_PAD_LEFT),
-                    'rw' => str_pad($rw, 3, "0", STR_PAD_LEFT),
-                ]);
-
-                $d['updated_by'] = user()->id;
-
-                // UPDATE WARGA
-                unset($d['csrf_test_name']);
-                unset($d['rt']);
-                unset($d['rw']);
-                unset($d['blok_number']);
-                unset($d['home_number']);
-
-                $update_warga = [];
-                foreach ($d as $key => $val) {
-                    $update_warga[$key] = $val;
-                }
-
-                $this->wargaModel->update($d['id'], $update_warga);
+            $idsToDelete = array_diff($existingIds, $newIds);
+            if (!empty($idsToDelete)) {
+                $this->wargaModel->whereIn('id', $idsToDelete)->delete();
             }
 
             if ($db->transStatus()) {
@@ -362,7 +373,6 @@ class UsersController extends BaseController
             }
         } catch (\Exception $e) {
             $db->transRollback();
-
             $type = "errors";
             $message = $e;
         }
