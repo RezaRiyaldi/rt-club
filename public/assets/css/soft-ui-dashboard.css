@@ -22871,7 +22871,7 @@ hr.horizontal.gray-light {
 }
 
 .table tbody tr:last-child td {
-  border-width: 0;
+  /* border-width: 0; */
 }
 
 .table> :not(:last-child)> :last-child>* {

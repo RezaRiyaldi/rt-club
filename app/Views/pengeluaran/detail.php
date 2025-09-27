@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <th>Dibuat oleh</th>
-                <td>: <?= $pengeluaran->fullname ?? '<span class="badge bg-secondary">UNKNOWN</span>' ?></td>
+                <td>: <?= $pengeluaran->fullname ?? $pengeluaran->username ?? '<span class="badge bg-secondary">UNKNOWN</span>' ?></td>
             </tr>
         </table>
     </div>

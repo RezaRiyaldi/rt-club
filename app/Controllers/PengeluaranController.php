@@ -147,7 +147,7 @@ class PengeluaranController extends BaseController
     {
         $id = base64_decode($_id);
 
-        $detailPengeluaran = $this->pengeluaranModel->select('pengeluarans.*, wargas.*')
+        $detailPengeluaran = $this->pengeluaranModel->select('pengeluarans.*, wargas.*, users.*')
             ->join('users', 'users.id = pengeluarans.created_by', 'left')
             ->join('wargas', 'wargas.user_id = users.id', 'left')
             ->where('pengeluarans.id', $id)

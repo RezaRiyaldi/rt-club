@@ -16,13 +16,13 @@ class UserModel2 extends UserModel
     {
         $builder = $this->table($this->table);
         $builder = $builder->select('w.*, w.id as warga_id, users.id as id_user, users.email, users.username, users.created_at as joined, ag.name as jabatan');
-        $builder = $builder->join('wargas w', 'w.user_id = users.id', 'left');
+        $builder = $builder->join('wargas w', 'w.user_id = users.id');
         $builder = $builder->join('auth_groups_users agus', 'agus.user_id = users.id', 'left');
         $builder = $builder->join('auth_groups ag', 'ag.id = agus.group_id', 'left');
 
-        if (!in_groups('superadmin')) {
-            $builder = $builder->whereNotIn('agus.group_id', [1]);
-        }
+        // if (!in_groups('superadmin')) {
+        //     $builder = $builder->whereNotIn('agus.group_id', [1]);
+        // }
 
         if (!empty($params['search'])) {
             if (!empty($params['columns'])) {
@@ -46,8 +46,8 @@ class UserModel2 extends UserModel
                 }
             }
         } else {
-            $builder = $builder->orderBy('w.no_kk', 'asc');
-            $builder = $builder->orderBy('FIELD(w.status_family, "Kepala Keluarga", "Istri", "Anak", "Lainnya")');
+            $builder = $builder->orderBy('SUBSTRING_INDEX(w.blok, " ", 1)', 'ASC', false);
+            $builder = $builder->orderBy('CAST(SUBSTRING_INDEX(w.blok, "No ", -1) AS UNSIGNED)', 'ASC', false);
         }
         return $builder->get()->getResult();
     }
@@ -58,12 +58,17 @@ class UserModel2 extends UserModel
             $column = 'ag.name';
         } elseif ($column == 'joined') {
             $column = 'users.created_at';
+        } elseif ($column == 'no_rumah') {
+            $column = 'w.blok';
+        } elseif ($column == 'no_hp') {
+            $column = 'w.phone';
         }
 
         return $column;
     }
 
-    public function getUserById($id) {
+    public function getUserById($id)
+    {
         $builder = $this->db->table('users')
             ->join('wargas w', 'w.user_id = users.id', 'left')
             ->where('users.id', $id)

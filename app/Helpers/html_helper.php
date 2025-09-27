@@ -1,6 +1,6 @@
 <?php
 
-function generateInput($value, $name)
+function generateInput($value, $name, $selectedOption = null)
 {
     $parts = explode(',', $value);
 
@@ -30,8 +30,13 @@ function generateInput($value, $name)
     sort($allOptions);
 
     $selectOptions = '';
+    $selected = '';
     foreach ($allOptions as $option) {
-        $selectOptions .= "<option value='$option'>$option</option>";
+        if ($selectedOption == $option) {
+            $selected = 'selected';
+        }
+
+        $selectOptions .= "<option $selected value='$option'>$option</option>";
     }
     $inputHTML = "<select name='$name' class='form-select'>" . $selectOptions . "</select>";
 

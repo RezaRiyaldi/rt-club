@@ -114,6 +114,7 @@
     var table = datatable({
         id: $("#users-management"),
         url: "<?= base_url() ?>users-man/get_list",
+        length: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         method: 'POST',
         columns: [{
                 data: 'no',
@@ -150,7 +151,7 @@
             },
         ],
         defs: {
-            targets: [5],
+            targets: [0, 7],
             searchable: false,
             orderable: false
         },

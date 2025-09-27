@@ -114,7 +114,7 @@
                                                     <option value="A">A</option>
                                                     <option value="B">B</option>
                                                     <option value="AB">AB</option>
-                                                    <option value="O" selected>O</option>
+                                                    <option value="O">O</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -249,22 +249,25 @@
                         return true;
                     }
 
-                    var rumah = value.match(/\d+/g);
-                    var inputBlok = [
-                        'blok_number', 'home_number'
-                    ];
+                    var match = value.match(/^([A-Za-z]+)(\d+)\s+No\s+(\d+)$/);
+                    
+                    if (match) {
+                        var inputBlok = {
+                            'blok': match[1],
+                            'blok_number': match[2],
+                            'home_number': match[3]
+                        };
 
-                    $.each(inputBlok, function(k, v) {
-                        var elementBlok = $('[name="' + v + '[]"]:last');
+                        $.each(inputBlok, function(name, val) {
+                            var element = $('[name="' + name + '[]"]:last');
 
-                        if (elementBlok.is('select')) {
-                            elementBlok.find('option[value="' + rumah[k] + '"]').prop('selected', true);
-                        } else if (elementBlok.is('input')) {
-                            elementBlok.val(rumah[k]);
-                        }
-                    });
-
-                    return true;
+                            if (element.is('select')) {
+                                element.find('option[value="' + val + '"]').prop('selected', true);
+                            } else if (element.is('input')) {
+                                element.val(val);
+                            }
+                        });
+                    }
                 }
 
                 if (elements.is(':radio')) {

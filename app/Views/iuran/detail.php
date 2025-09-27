@@ -38,7 +38,8 @@
                 <thead>
                     <tr class="text-center">
                         <th>No</th>
-                        <th>Tanggal Bayar</th>
+                        <th>Periode Bayar</th>
+                        <th>Waktu Bayar</th>
                         <!-- <th>Metode Pembayaran</th> -->
                         <th class="text-start">Nominal</th>
                         <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) : ?>
@@ -57,7 +58,11 @@
 
                         <tr>
                             <td class="text-center"><?= $no++ ?></td>
-                            <td class="text-center"><?= date('d F Y', strtotime($iuran->periode)) ?></td>
+                            <td class="text-center"><?= date('d/m/Y', strtotime($iuran->periode)) ?></td>
+                            <td class="d-flex flex-column">
+                                <span><?= date('d F Y H:i:s', strtotime($iuran->created_at)) ?></span>
+                                <span style="font-size: .9rem; font-style: italic;" class="text-muted"><?= timeAgo($iuran->created_at) ?></span>
+                            </td>
                             <!-- <td class="text-center"><?= $iuran->payment_method ?? 'CASH' ?></td> -->
                             <td>Rp. <?= number_format($iuran->nominal) ?></td>
                             <?php if (in_groups(['Superadmin', 'Ketua RT', 'Bendahara', 'Sekretaris'])) : ?>
@@ -81,39 +86,39 @@
 </div>
 
 <?php if ($iuranTypes['subTypes']) : ?>
-<div class="row mt-3">
-    <div class="col-md-6">
-        <div class="card border border-info">
-            <div class="card-body">
-                <?php $iuranType = $iuranTypes['iuranType']; ?>
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card border border-info">
+                <div class="card-body">
+                    <?php $iuranType = $iuranTypes['iuranType']; ?>
 
-                <h5>Rincian <?= $iuranType->type ?></h5>
-                <table class="table table-bordered">
-                    <tr class="text-center">
-                        <th>No</th>
-                        <th>Sub Tipe Iuran</th>
-                        <th>Nominal</th>
-                    </tr>
-                    <?php
-                    $no = 1;
-                    $total = 0;
-                    foreach ($iuranTypes['subTypes'] as $type) :
-                        $total += $type->nominal;
-                    ?>
-                        <tr>
-                            <td class="text-center"><?= $no++ ?></td>
-                            <td><?= $type->type ?></td>
-                            <td>Rp. <?= number_format($type->nominal) ?></td>
+                    <h5>Rincian <?= $iuranType->type ?></h5>
+                    <table class="table table-bordered">
+                        <tr class="text-center">
+                            <th>No</th>
+                            <th>Sub Tipe Iuran</th>
+                            <th>Nominal</th>
                         </tr>
-                    <?php endforeach ?>
-                    <tr>
-                        <th colspan="2" class="text-center">Total</th>
-                        <th>Rp. <?= number_format($total) ?></th>
-                    </tr>
-                </table>
+                        <?php
+                        $no = 1;
+                        $total = 0;
+                        foreach ($iuranTypes['subTypes'] as $type) :
+                            $total += $type->nominal;
+                        ?>
+                            <tr>
+                                <td class="text-center"><?= $no++ ?></td>
+                                <td><?= $type->type ?></td>
+                                <td>Rp. <?= number_format($type->nominal) ?></td>
+                            </tr>
+                        <?php endforeach ?>
+                        <tr>
+                            <th colspan="2" class="text-center">Total</th>
+                            <th>Rp. <?= number_format($total) ?></th>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 <?php endif ?>
 <?= $this->endSection('content'); ?>

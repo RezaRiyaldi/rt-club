@@ -307,6 +307,8 @@ class UsersController extends BaseController
             $existingIds = array_column($this->wargaModel->select('id')->where('no_kk', $dataForm['no_kk'])->findAll(), 'id');
             $newIds = [];
             foreach ($data as $d) {
+                $d['fullname'] = strtoupper($d['fullname']);
+
                 if (isset($d['id']) && !empty($d['id'])) {
                     $newIds[] = $d['id'];
                     if ($d['status_family'] == "Kepala Keluarga") {
