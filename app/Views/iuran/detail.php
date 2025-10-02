@@ -58,7 +58,7 @@
 
                         <tr>
                             <td class="text-center"><?= $no++ ?></td>
-                            <td class="text-center"><?= date('d/m/Y', strtotime($iuran->periode)) ?></td>
+                            <td class="text-center"><?= date('F Y', strtotime($iuran->periode)) ?></td>
                             <td class="d-flex flex-column">
                                 <span><?= date('d F Y H:i:s', strtotime($iuran->created_at)) ?></span>
                                 <span style="font-size: .9rem; font-style: italic;" class="text-muted"><?= timeAgo($iuran->created_at) ?></span>

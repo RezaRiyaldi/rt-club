@@ -14,7 +14,7 @@
                         <div class="col-md-8 mx-auto d-block">
                             <div class="mb-3 text-center">
                                 <label for="" class="text-lg">No. Kartu Keluarga <span class="text-danger">*</span></label>
-                                <input type="text" name="no_kk" class="form-control" required placeholder="Nomor Kartu Keluarga">
+                                <input type="number" name="no_kk" class="form-control" required placeholder="Nomor Kartu Keluarga">
                             </div>
                         </div>
 
@@ -29,7 +29,7 @@
                                             <div class="mb-2">
                                                 <input type="hidden" name="id[]">
                                                 <label for="">NIK <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" name="no_ktp[]" required placeholder="Nomor Induk Kependudukan">
+                                                <input type="number" class="form-control" name="no_ktp[]" required placeholder="Nomor Induk Kependudukan">
                                             </div>
                                         </div>
 
@@ -131,7 +131,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-2">
                                         <label for="">No Hp</label>
-                                        <input type="text" name="phone[]" class="form-control" placeholder="Nomor telepon">
+                                        <input type="number" name="phone[]" class="form-control" placeholder="Nomor telepon">
                                         <small class="text-danger" id="phoneError" style="display: none;">Format nomor HP tidak valid!</small>
                                     </div>
                                     <div class="mb-2">
@@ -438,7 +438,7 @@
                             <div class="mb-2">
                                 <input type="hidden" name="id[]">
                                 <label for="">NIK <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="no_ktp[]" required placeholder="Nomor Induk Kependudukan">
+                                <input type="number" class="form-control" name="no_ktp[]" required placeholder="Nomor Induk Kependudukan">
                             </div>
                         </div>
 
@@ -550,7 +550,7 @@
                     </div>
                     <div class="mb-2">
                         <label for="">No Hp</label>
-                        <input type="text" name="phone[]" class="form-control" placeholder="Nomor telepon">
+                        <input type="number" name="phone[]" class="form-control" placeholder="Nomor telepon">
                         <small class="text-danger" id="phoneError" style="display: none;">Format nomor HP tidak valid!</small>
                     </div>
                     <div class="">
