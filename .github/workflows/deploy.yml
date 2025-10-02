@@ -1,0 +1,34 @@
+name: 🚀 Deploy CI4 to Shared Hosting
+
+on:
+  push:
+    branches:
+      - master   # otomatis jalan saat push ke branch master
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+
+      - name: Deploy to FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # server-dir: ${{ secrets.FTP_PATH }}/   # sesuaikan dengan folder project di hosting
+          exclude: |
+            .github/**
+            .gitignore
+            .gitattributes
+            .env
+            tests/**
+            node_modules/**
+            vendor/**
+            .vscode/**
