@@ -23,3 +23,12 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           # server-dir: ${{ secrets.FTP_PATH }}/   # sesuaikan dengan folder project di hosting
+          exclude: |
+            .github/**
+            .gitignore
+            .gitattributes
+            .env
+            tests/**
+            node_modules/**
+            vendor/**
+            .vscode/**
