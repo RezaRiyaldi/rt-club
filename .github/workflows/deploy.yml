@@ -22,4 +22,4 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_PATH }}/   # sesuaikan dengan folder project di hosting
+          # server-dir: ${{ secrets.FTP_PATH }}/   # sesuaikan dengan folder project di hosting
