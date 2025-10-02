@@ -1,34 +1,29 @@
-name: 🚀 Deploy CI4 to Shared Hosting
+name: 🚀 Deploy CI4 to Shared Hosting via SSH
 
 on:
   push:
     branches:
-      - master   # otomatis jalan saat push ke branch master
+      - master  # deploy otomatis tiap push ke master
 
 jobs:
-  ftp-deploy:
+  ssh-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: |
-          composer install --no-dev --optimize-autoloader
-
-      - name: Deploy to FTP Server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.6
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          # server-dir: ${{ secrets.FTP_PATH }}/   # sesuaikan dengan folder project di hosting
-          exclude: |
-            .github/**
-            .gitignore
-            .gitattributes
-            .env
-            tests/**
-            node_modules/**
-            vendor/**
-            .vscode/**
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/public_html/simrt
+            git fetch --all
+            git reset --hard origin/master
+            composer install --no-dev --optimize-autoloader
+            php spark migrate --all       # optional, kalau mau auto migrate
+            chmod -R 775 writable
